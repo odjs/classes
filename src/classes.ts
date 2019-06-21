@@ -1,85 +1,82 @@
 import hasOwn from "./has";
 import { ClassName, ClassObject, OutputClassObject } from "./types";
 
-function objToArr(object: ClassObject, normalize?: 1): string[] {
-  if (normalize) {
-    object = norm(object, {});
+function objToStr(obj: ClassObject, normIt?: 1): string {
+  if (normIt) {
+    obj = norm(obj, {});
   }
-  const result: string[] = [];
-  for (const key in object) {
-    if (hasOwn.call(object, key) && object[key]) {
-      result.push(key);
+  const arr: string[] = [];
+  for (const key in obj) {
+    if (hasOwn.call(obj, key) && obj[key]) {
+      arr.push(key);
     }
   }
-  return result;
+  return arr.join(" ");
 }
 
-function objToStr(object: ClassObject, normalize?: 1): string {
-  return objToArr(object, normalize).join(" ");
-}
-
-function strToObj(str: string, value: boolean, output: OutputClassObject): OutputClassObject {
+function strToObj(str: string, val: boolean, out: OutputClassObject): OutputClassObject {
   if (str) {
     const names = str.split(" ").filter(Boolean);
     const len = names.length;
     if (len) {
       for (let i = 0; i < len; i++) {
-        output[names[i]] = value;
+        out[names[i]] = val;
       }
     }
   }
-  return output;
+  return out;
 }
 
-function norm(object: ClassObject, output: OutputClassObject): OutputClassObject {
-  for (const key in object) {
-    if (hasOwn.call(object, key)) {
+function norm(obj: ClassObject, out: OutputClassObject): OutputClassObject {
+  for (const key in obj) {
+    if (hasOwn.call(obj, key)) {
       strToObj(
         key,
-        Boolean(object[key]),
-        output,
+        Boolean(obj[key]),
+        out,
       );
     }
   }
-  return output;
+  return out;
 }
 
-function arrToObj(array: ClassName[] | ArrayLike<ClassName>, output: OutputClassObject): OutputClassObject {
-  const len = array.length;
+function arrToObj(arr: ClassName[] | ArrayLike<ClassName>, out: OutputClassObject): OutputClassObject {
+  const len = arr.length;
   if (len) {
     for (let i = 0; i < len; i++) {
-      classNameToObj(array[i], output);
+      const clnm = arr[i];
+      if (Array.isArray(clnm)) {
+        arrToObj(clnm, out);
+      } else if (typeof clnm === "object") {
+        norm(clnm, out);
+      } else {
+        strToObj(clnm, true, out);
+      }
     }
   }
-  return output;
+  return out;
 }
 
-function classNameToObj(className: ClassName, output: OutputClassObject): OutputClassObject {
-  return Array.isArray(className)
-    ? arrToObj(className, output)
-    : (typeof className === "object")
-      ? norm(className, output)
-      : strToObj(className, true, output);
-}
-
-function fromArray(array: ClassName[] | ArrayLike<ClassName>): string {
+function fromArray(array: ClassName[] | ArrayLike<ClassName>): string;
+function fromArray(arr: ClassName[] | ArrayLike<ClassName>): string {
   return objToStr(
     arrToObj(
-      array,
+      arr,
       {},
     ),
   );
 }
 
-function classes(...params: ClassName[]): string;
+function classes(...names: ClassName[]): string;
 function classes(): string {
   return fromArray(
     arguments,
   );
 }
 
-function fromObj(object: ClassObject): string {
-  return objToStr(object, 1);
+function fromObj(object: ClassObject): string;
+function fromObj(obj: ClassObject): string {
+  return objToStr(obj, 1);
 }
 
 export {
