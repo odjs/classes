@@ -1,8 +1,8 @@
 # @odjs/classes
 
-Classname management for [@odjs/dom](https://github.com/manferlo81/odjs-dom)
+Classname management for [@odjs/dom](https://github.com/odjs/dom)
 
-*While this project has been created to be used internally in [@odjs/dom](https://github.com/manferlo81/odjs-dom), it can be used as standalone both in Node.js and in the browser.*
+*While this project has been created to be used internally in [@odjs/dom](https://github.com/odjs/dom), it can be used as standalone both in Node.js and in the browser.*
 
 ## Install
 

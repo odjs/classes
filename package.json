@@ -38,11 +38,11 @@
   "author": "Manuel Fernandez <manferlo81@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/manferlo81/odjs-classes.git"
+    "url": "git+https://github.com/odjs/classes.git"
   },
   "bugs": {
-    "url": "https://github.com/manferlo81/odjs-classes/issues"
+    "url": "https://github.com/odjs/classes/issues"
   },
-  "homepage": "https://github.com/manferlo81/odjs-classes#readme",
+  "homepage": "https://github.com/odjs/classes#readme",
   "license": "MIT"
 }
