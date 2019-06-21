@@ -1,0 +1,44 @@
+{
+  "name": "@odjs/classes",
+  "version": "0.0.0",
+  "description": "Classname management for @odjs/dom",
+  "main": "dist/classes.cjs.js",
+  "module": "dist/classes.es.js",
+  "browser": "dist/classes.umd.js",
+  "bundlib": {
+    "name": "classes",
+    "min": "browser"
+  },
+  "types": "types/index.d.ts",
+  "typings": "types/index.d.ts",
+  "keywords": [
+    "odjs",
+    "dom",
+    "class",
+    "classes",
+    "clasname"
+  ],
+  "scripts": {
+    "build": "bundlib -d",
+    "test": "jest --color"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.15",
+    "@types/node": "^12.0.8",
+    "bundlib": "^0.5.1",
+    "eslint": "^5.16.0",
+    "jest": "^24.8.0",
+    "tslint": "^5.17.0",
+    "typescript": "^3.5.2"
+  },
+  "author": "Manuel Fernandez <manferlo81@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manferlo81/odjs-classes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/manferlo81/odjs-classes/issues"
+  },
+  "homepage": "https://github.com/manferlo81/odjs-classes#readme",
+  "license": "MIT"
+}
