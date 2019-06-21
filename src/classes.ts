@@ -1,5 +1,6 @@
-import hasOwn from "./has";
 import { ClassName, ClassObject, NormalizedClassObject } from "./types";
+
+const hasOwn = {}.hasOwnProperty;
 
 function strToObj(str: string, val: boolean, out: NormalizedClassObject): NormalizedClassObject {
   if (str) {
