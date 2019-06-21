@@ -68,6 +68,15 @@ test("should return classname from object", () => {
 test("should return classname from object using fromObj", () => {
 
   const classObj = { class1: false, "class2 class3": true, class2: false };
+  const result = fromObj(classObj);
+
+  expect(result).toBe("class2 class3");
+
+});
+
+test("should return classname from normalized object using fromObj", () => {
+
+  const classObj = { class1: false, "class2 class3": true, class2: false };
   const result = fromObj(classObj, true);
 
   expect(result).toBe("class3");
