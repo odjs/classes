@@ -1,8 +1,18 @@
-# odjs-classes
+# @odjs/classes
 
-Classname management for @odjs/dom
+Classname management for [@odjs/dom](https://github.com/manferlo81/odjs-dom)
 
 *While this project has been created to be used internally in [@odjs/dom](https://github.com/manferlo81/odjs-dom), it can be used as standalone both in Node.js and in the browser.*
+
+## Install
+
+```bash
+npm i @odjs/classes
+```
+
+*For the browser you can use one of owr [cdn](#cdn) scripts, or you can use a tool like Webpack, Browserify or Parcel.*
+
+[*see usage section...*](#usage)
 
 ## API
 
@@ -110,6 +120,57 @@ interface ClassObject {
 interface ClassArray {
   [index: number]: string | ClassObject | ClassArray;
 }
+```
+
+## CDN
+
+### jsDelivr
+
+*[www.jsdelivr.com](https://www.jsdelivr.com)*
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@odjs/classes@latest/dist/map.umd.js"></script>
+```
+
+##### for production
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@odjs/classes@latest/dist/map.umd.min.js"></script>
+```
+
+*[more options...](https://www.jsdelivr.com/package/npm/@odjs/classes?version=latest)*
+
+### unpkg
+
+*[unpkg.com](https://unpkg.com)*
+
+```html
+<script src="https://unpkg.com/@odjs/classes@latest/dist/map.umd.js"></script>
+```
+
+##### for production
+
+```html
+<script src="https://unpkg.com/@odjs/classes@latest/dist/map.umd.min.js"></script>
+```
+
+*[more options...](https://unpkg.com/@odjs/classes@latest/)*
+
+## Usage
+
+### Node.js
+
+```javascript
+const { classes } = require("@odjs/classes");
+element.className = classes({ btn: true, red: true });
+```
+
+### Browser
+
+*After including the* `script` *tag in your html file,* `classes` *will be available globally.*
+
+```javascript
+element.className = classes.classes({ btn: true, red: true });
 ```
 
 ## Features
