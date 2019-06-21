@@ -1,2 +1,2 @@
-export { ClassName, ClassObject } from "./types";
-export { classes, fromObj, fromArray } from "./classes";
+export * from "./types";
+export * from "./classes";
