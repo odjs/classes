@@ -19,8 +19,12 @@
     "clasname"
   ],
   "scripts": {
-    "build": "bundlib -d",
-    "test": "jest --color"
+    "clean": "rm -rf .cache dist types coverage",
+    "lint": "tslint src/**/*.ts",
+    "dev": "bundlib -dw",
+    "build": "npm run lint && bundlib -d",
+    "test": "jest --color",
+    "preversion": "npm run clean && npm run build && npm test"
   },
   "devDependencies": {
     "@types/jest": "^24.0.15",
