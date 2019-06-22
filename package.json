@@ -16,7 +16,8 @@
     "dom",
     "class",
     "classes",
-    "clasname"
+    "classname",
+    "classnames"
   ],
   "scripts": {
     "clean": "rm -rf .cache dist types coverage",
