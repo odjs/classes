@@ -5,6 +5,7 @@
 
 * dependencies updated
 * added `circleci` badge
+* added `codecov` badge
 * documentation improved
 
 ## 0.0.1
