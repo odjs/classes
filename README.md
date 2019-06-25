@@ -20,7 +20,7 @@ npm i @odjs/classes
 
 ### classes
 
-###### syntax
+***syntax***
 
 ```typescript
 classes(...names: ClassName[]): string;
@@ -28,7 +28,7 @@ classes(...names: ClassName[]): string;
 
 *Accepts any number of [ClassName](#classname) arguments and returns normalized classname string.*
 
-###### example
+***example***
 
 ```javascript
 classes(
@@ -47,7 +47,7 @@ classes(
 
 ### fromArray
 
-###### syntax
+***syntax***
 
 ```typescript
 fromArray(array: ClassName[] | ArrayLike<ClassName>): string;
@@ -55,7 +55,7 @@ fromArray(array: ClassName[] | ArrayLike<ClassName>): string;
 
 *This method expects a single argument of type* [`ClassArray`](#classarray), *any other argument (if any) will be ignored.*
 
-###### example
+***example***
 
 ```javascript
 fromArray([
@@ -73,7 +73,7 @@ fromArray([
 
 ### fromObj
 
-###### syntax
+***syntax***
 
 ```typescript
 fromObj(object: ClassObject, mormalize?: boolean): string;
@@ -81,7 +81,7 @@ fromObj(object: ClassObject, mormalize?: boolean): string;
 
 *This method expects a [ClassObject](#classobject) as first and required argument, and an optional* `normalize` *argument, which set whether or not to normalize the input object. See see [object normalization feature](#object-normalization) for more information.*
 
-###### example
+***example***
 
 ```javascript
 fromObj({
@@ -98,15 +98,11 @@ fromObj({
 
 ### ClassName
 
-###### type
-
 ```typescript
 type ClassName = string | ClassObject | ClassArray;
 ```
 
 ### ClassObject
-
-###### interface
 
 ```typescript
 interface ClassObject {
@@ -115,8 +111,6 @@ interface ClassObject {
 ```
 
 ### ClassArray
-
-###### interface
 
 ```typescript
 interface ClassArray {
@@ -128,13 +122,11 @@ interface ClassArray {
 
 ### jsDelivr
 
-*[www.jsdelivr.com](https://www.jsdelivr.com)*
-
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@odjs/classes@latest/dist/map.umd.js"></script>
 ```
 
-##### for production
+*or for production...*
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@odjs/classes@latest/dist/map.umd.min.js"></script>
@@ -144,13 +136,11 @@ interface ClassArray {
 
 ### unpkg
 
-*[unpkg.com](https://unpkg.com)*
-
 ```html
 <script src="https://unpkg.com/@odjs/classes@latest/dist/map.umd.js"></script>
 ```
 
-##### for production
+*for production...*
 
 ```html
 <script src="https://unpkg.com/@odjs/classes@latest/dist/map.umd.min.js"></script>
@@ -181,7 +171,7 @@ element.className = classes.classes({ btn: true, red: true });
 
 *Objects with "multi-class" keys (keys that contain spaces) will be normalized, which allows to extend a "single-class" after it's been set as a "multi-class".*
 
-###### example
+***example***
 
 ```javascript
 const classObj1 = {

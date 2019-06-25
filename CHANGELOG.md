@@ -5,6 +5,7 @@
 
 * dependencies updated
 * added `circleci` badge
+* documentation improved
 
 ## 0.0.1
 *21-JUN-2019*
