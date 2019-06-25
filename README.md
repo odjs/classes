@@ -1,5 +1,7 @@
 # @odjs/classes
 
+[![CircleCI](https://circleci.com/gh/odjs/classes.svg?style=svg)](https://circleci.com/gh/odjs/classes)
+
 Classname management for [@odjs/dom](https://github.com/odjs/dom)
 
 *While this project has been created to be used internally in [@odjs/dom](https://github.com/odjs/dom), it can be used as standalone both in Node.js and in the browser.*
