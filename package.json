@@ -6,7 +6,6 @@
   "module": "dist/classes.es.js",
   "browser": "dist/classes.umd.js",
   "bundlib": {
-    "name": "classes",
     "min": "browser"
   },
   "types": "types/index.d.ts",
