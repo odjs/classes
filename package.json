@@ -20,7 +20,7 @@
     "classnames"
   ],
   "scripts": {
-    "clean": "rm -rf .cache dist types coverage",
+    "clean": "rm -rf node_modules/.cache/bundlib node_modules/.cache/jest dist types coverage",
     "lint": "tslint src/**/*.ts",
     "dev": "bundlib -dw",
     "build": "npm run lint && bundlib -d",
