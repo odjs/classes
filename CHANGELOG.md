@@ -5,6 +5,7 @@
 
 * added `greenkeeper` badge
 * added `version` badge
+* added `license` badge
 
 ## 0.0.2
 *25-JUN-2019*
