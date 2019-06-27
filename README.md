@@ -1,6 +1,6 @@
 # @odjs/classes
 
-[![CircleCI](https://circleci.com/gh/odjs/classes.svg?style=svg)](https://circleci.com/gh/odjs/classes) [![Greenkeeper badge](https://badges.greenkeeper.io/odjs/classes.svg)](https://greenkeeper.io/) [![npm](https://img.shields.io/npm/v/@odjs/classes.svg)](https://www.npmjs.com/package/@odjs/classes) [![codecov](https://codecov.io/gh/odjs/classes/branch/master/graph/badge.svg)](https://codecov.io/gh/odjs/classes) [![Known Vulnerabilities](https://snyk.io//test/github/odjs/classes/badge.svg?targetFile=package.json)](https://snyk.io//test/github/odjs/classes?targetFile=package.json) [![NPM](https://img.shields.io/npm/l/@odjs/classes.svg)](LICENSE)
+[![CircleCI](https://circleci.com/gh/odjs/classes.svg?style=svg)](https://circleci.com/gh/odjs/classes) [![Greenkeeper badge](https://badges.greenkeeper.io/odjs/classes.svg)](https://greenkeeper.io/) [![npm](https://img.shields.io/npm/v/@odjs/classes.svg)](https://www.npmjs.com/package/@odjs/classes) ![npm type definitions](https://img.shields.io/npm/types/@odjs/classes.svg) [![codecov](https://codecov.io/gh/odjs/classes/branch/master/graph/badge.svg)](https://codecov.io/gh/odjs/classes) [![Known Vulnerabilities](https://snyk.io//test/github/odjs/classes/badge.svg?targetFile=package.json)](https://snyk.io//test/github/odjs/classes?targetFile=package.json) [![NPM LICENSE](https://img.shields.io/npm/l/@odjs/classes.svg)](LICENSE)
 
 Classname management for [@odjs/dom](https://github.com/odjs/dom)
 

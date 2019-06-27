@@ -5,6 +5,7 @@
 
 * added `greenkeeper` badge
 * added `version` badge
+* added `types` badge
 * added `license` badge
 
 ## 0.0.2
