@@ -1,6 +1,6 @@
 {
   "name": "@odjs/classes",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Classname management for @odjs/dom",
   "main": "dist/classes.cjs.js",
   "module": "dist/classes.es.js",
