@@ -4,6 +4,7 @@
 *27-JUN-2019*
 
 * added `greenkeeper` badge
+* added `version` badge
 
 ## 0.0.2
 *25-JUN-2019*
