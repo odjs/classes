@@ -1,5 +1,10 @@
 # @odjs/classes changelog
 
+## 0.0.3
+*27-JUN-2019*
+
+* added `greenkeeper` badge
+
 ## 0.0.2
 *25-JUN-2019*
 
