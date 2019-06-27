@@ -1,6 +1,6 @@
 # @odjs/classes
 
-[![CircleCI](https://circleci.com/gh/odjs/classes.svg?style=svg)](https://circleci.com/gh/odjs/classes) [![codecov](https://codecov.io/gh/odjs/classes/branch/master/graph/badge.svg)](https://codecov.io/gh/odjs/classes) [![Known Vulnerabilities](https://snyk.io//test/github/odjs/classes/badge.svg?targetFile=package.json)](https://snyk.io//test/github/odjs/classes?targetFile=package.json)
+[![CircleCI](https://circleci.com/gh/odjs/classes.svg?style=svg)](https://circleci.com/gh/odjs/classes) [![codecov](https://codecov.io/gh/odjs/classes/branch/master/graph/badge.svg)](https://codecov.io/gh/odjs/classes) [![Known Vulnerabilities](https://snyk.io//test/github/odjs/classes/badge.svg?targetFile=package.json)](https://snyk.io//test/github/odjs/classes?targetFile=package.json) [![Greenkeeper badge](https://badges.greenkeeper.io/odjs/classes.svg)](https://greenkeeper.io/)
 
 Classname management for [@odjs/dom](https://github.com/odjs/dom)
 
