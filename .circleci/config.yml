@@ -16,7 +16,7 @@ commands:
     steps:
       - run:
           name: Authenticate
-          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > $CIRCLE_WORKING_DIRECTORY/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
       - run:
           name: Publish to npm
           # specify access for scoped package
@@ -45,8 +45,9 @@ jobs:
           key: v1-dep-odjs-classes-{{ checksum "package.json" }}
           paths:
             - node_modules
-      - run: echo "test1" > .npmrc
-      - run: pwd && ls -a
+      - run:
+          name: Files
+          command: ls -a
       - persist_to_workspace:
           root: *working_directory
           paths: .
