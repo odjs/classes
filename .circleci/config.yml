@@ -16,7 +16,7 @@ commands:
     steps:
       - run:
           name: Authenticate
-          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/odjs-classes/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
       - run:
           name: Publish to npm
           # specify access for scoped package
@@ -45,9 +45,8 @@ jobs:
           key: v1-dep-odjs-classes-{{ checksum "package.json" }}
           paths:
             - node_modules
-      - run: echo "test" > test.txt
-      - run: pwd
-      - run: ls
+      - run: echo "test" > .npmrctest
+      - run: pwd && ls
       - persist_to_workspace:
           root: *working_directory
           paths: .
