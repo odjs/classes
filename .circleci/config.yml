@@ -45,9 +45,6 @@ jobs:
           key: v1-dep-odjs-classes-{{ checksum "package.json" }}
           paths:
             - node_modules
-      - run:
-          name: Files
-          command: ls -a
       - persist_to_workspace:
           root: *working_directory
           paths: .
