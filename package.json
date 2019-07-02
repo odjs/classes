@@ -2,14 +2,6 @@
   "name": "@odjs/classes",
   "version": "0.0.3",
   "description": "Classname management for @odjs/dom",
-  "main": "dist/classes.cjs.js",
-  "module": "dist/classes.es.js",
-  "browser": "dist/classes.umd.js",
-  "bundlib": {
-    "min": "browser"
-  },
-  "types": "types/index.d.ts",
-  "typings": "types/index.d.ts",
   "keywords": [
     "odjs",
     "dom",
@@ -18,12 +10,20 @@
     "classname",
     "classnames"
   ],
+  "main": "dist/classes.cjs.js",
+  "module": "dist/classes.es.js",
+  "browser": "dist/classes.umd.js",
+  "types": "types/index.d.ts",
+  "typings": "types/index.d.ts",
+  "bundlib": {
+    "min": "browser"
+  },
   "scripts": {
     "clean": "rm -rf node_modules/.cache/bundlib node_modules/.cache/jest dist types coverage",
     "lint": "tslint src/**/*.ts",
     "dev": "bundlib -dw",
     "build": "npm run lint && bundlib -d",
-    "test": "jest --color",
+    "test": "jest --color -w 3",
     "preversion": "npm run clean && npm run build && npm test"
   },
   "devDependencies": {
