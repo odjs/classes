@@ -45,7 +45,8 @@ jobs:
           key: v1-dep-odjs-classes-{{ checksum "package.json" }}
           paths:
             - node_modules
-      - run: echo "test" > "${CIRCLE_WORKING_DIRECTORY}/test.txt"
+      - run: echo "test1" > ".npmrc1"
+      - run: echo "test2" > "/.npmrc2"
       - run: pwd && ls
       - persist_to_workspace:
           root: *working_directory
