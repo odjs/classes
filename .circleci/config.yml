@@ -46,6 +46,7 @@ jobs:
           paths:
             - node_modules
       - run: echo "test" > test.txt
+      - run: pwd
       - run: ls
       - persist_to_workspace:
           root: *working_directory
