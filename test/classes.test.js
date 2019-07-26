@@ -1,3 +1,5 @@
+// @ts-check
+
 const { classes, fromObj } = require("..");
 
 test("should return classname from classname", () => {

@@ -6,6 +6,7 @@
 
 * dependencies updated
 * removed `fromArray` method
+* optimizations
 * improved documentation
 
 ## 0.0.3
