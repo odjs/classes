@@ -45,16 +45,15 @@ classes(
 
 *note the* `"has-border"` *is not present in the resulting string, see [object normalization feature](#object-normalization) for more information.*
 
-### fromArray
-
-*This method has been removed in* `v0.1.0` *as the same result can be achieved with the* [`classes`](#classes) *method. It is still being exposed for compatibility but it points to the* [`classes`](#classes) *method.*
-
 ### fromObj
 
 ***syntax***
 
 ```typescript
-fromObj(object: ClassObject, mormalize?: boolean): string;
+fromObj(
+  object: ClassObject,
+  mormalize: boolean = false,
+): string;
 ```
 
 *This method expects a [ClassObject](#classobject) as first and required argument, and an optional* `normalize` *argument, which sets whether or not to normalize the input object. See see [object normalization feature](#object-normalization) for more information.*
@@ -71,6 +70,10 @@ fromObj({
 ```console
 > "btn btn-small"
 ```
+
+### fromArray
+
+*This method has been removed in* `v0.1.0` *as the same result can be achieved by the* [`classes`](#classes) *method. For compatibility it's still being exposed but it points to the* [`classes`](#classes) *method. This method will be removed in the future and therefore should not be used. Use* [`classes`](#classes) *method instead.*
 
 ## Types
 
@@ -92,7 +95,7 @@ interface ClassObject {
 
 ```typescript
 interface ClassArray {
-  [index: number]: string | ClassObject | ClassArray;
+  [index: number]: ClassName;
 }
 ```
 
@@ -140,14 +143,16 @@ element.className = classes({ btn: true, red: true });
 *After including the* `script` *tag in your html file,* `classes` *will be available globally.*
 
 ```javascript
-element.className = classes.classes({ btn: true, red: true });
+element.className = classes.classes("btn", { red: true });
 ```
 
 ## Features
 
 ### Object Normalization
 
-*Objects with "multi-class" keys (keys that contain spaces) will be normalized, which allows to extend a "single-class" after it's been set from a "multi-class". This behavior is enabled in* [`classes`](#classes) *method and optional in* [`fromObj`](#fromobj) *method.*
+*Objects with "multi-class" keys (keys that contain spaces) will be normalized, which allows to extend a "single-class" after it's been set from a "multi-class". It also removes any extra space in the object keys.*
+
+*This behavior is enabled in* [`classes`](#classes) *method and optional in* [`fromObj`](#fromobj) *method.*
 
 ***example***
 
