@@ -1,5 +1,3 @@
-const { main } = require("./package.json");
-
 const CI = process.env.CI;
 
 module.exports = {
@@ -9,9 +7,11 @@ module.exports = {
 
   cacheDirectory: "node_modules/.cache/jest",
 
+  preset: "ts-jest",
+
   collectCoverage: true,
   collectCoverageFrom: [
-    main,
+    "src/**/*.ts",
   ],
   coverageDirectory: "coverage",
   coverageReporters: [
