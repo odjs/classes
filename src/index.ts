@@ -32,17 +32,14 @@ function normalizeObject(object: ClassObject, output: NormalizedClassObject): No
 }
 
 function arrayToObject(array: ClassArray | ArrayLike<ClassName>, output: NormalizedClassObject): NormalizedClassObject {
-  const len = array.length;
-  if (len) {
-    for (let i = 0; i < len; i++) {
-      const clnm = array[i];
-      if (Array.isArray(clnm)) {
-        arrayToObject(clnm, output);
-      } else if (typeof clnm === "object") {
-        normalizeObject(clnm, output);
-      } else {
-        stringToObject(clnm, true, output);
-      }
+  for (let i = 0, len = array.length; i < len; i++) {
+    const clnm = array[i];
+    if (Array.isArray(clnm)) {
+      arrayToObject(clnm, output);
+    } else if (typeof clnm === "object") {
+      normalizeObject(clnm, output);
+    } else {
+      stringToObject(clnm, true, output);
     }
   }
   return output;
