@@ -1,10 +1,12 @@
 # @odjs/classes changelog
 
-## 0.0.4
+## 0.1.0
 
 ***26-JUL-2019***
 
 * dependencies updated
+* removed `fromArray` method
+* improved documentation
 
 ## 0.0.3
 

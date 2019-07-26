@@ -1,4 +1,4 @@
-const { classes, fromArray, fromObj } = require("..");
+const { classes, fromObj } = require("..");
 
 test("should return classname from classname", () => {
 
@@ -21,36 +21,22 @@ test("should return classname from multiple classnames", () => {
 
 test("should return empty classname from empty string", () => {
 
-  const classname = "";
+  const classname = "   ";
   const result = classes(classname);
 
-  expect(result).toBe(classname);
+  expect(result).toBe("");
 
 });
 
-test("should return classname from array", () => {
+test("should return classname from array ignoring extra spaces", () => {
 
   const classArray = [
-    "class1",
-    { "class2 class3": true, class4: false },
-    ["class5", "class6"],
+    " class1 ",
+    { " class2    class3 ": true, class4: false },
+    [" class5 ", " class6 "],
     { class3: false },
   ];
   const result = classes(classArray);
-
-  expect(result).toBe("class1 class2 class5 class6");
-
-});
-
-test("should return classname from array using fromArray", () => {
-
-  const classArray = [
-    "class1",
-    { "class2 class3": true, class4: false },
-    ["class5", "class6"],
-    { class3: false },
-  ];
-  const result = fromArray(classArray);
 
   expect(result).toBe("class1 class2 class5 class6");
 

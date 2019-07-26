@@ -8,11 +8,14 @@ const hasOwn = Object.prototype.hasOwnProperty;
 
 function strToObj(str: string, val: boolean, out: NormalizedClassObject): NormalizedClassObject {
   if (str) {
-    const names = str.split(" ").filter(Boolean);
+    const names = str.split(" ");
     const len = names.length;
     if (len) {
       for (let i = 0; i < len; i++) {
-        out[names[i]] = val;
+        const cn = names[i];
+        if (cn) {
+          out[names[i]] = val;
+        }
       }
     }
   }
@@ -63,19 +66,14 @@ export function fromObj(obj: ClassObject, normIt?: any): string {
   return arr.join(" ");
 }
 
-export function fromArray(array: ClassName[] | ArrayLike<ClassName>): string;
-export function fromArray(arr: ClassName[] | ArrayLike<ClassName>): string {
+export function classes(...names: ClassName[]): string;
+export function classes(): string {
   return fromObj(
     arrToObj(
-      arr,
+      arguments,
       {},
     ),
   );
 }
 
-export function classes(...names: ClassName[]): string;
-export function classes(): string {
-  return fromArray(
-    arguments,
-  );
-}
+export { classes as fromArray };

@@ -12,7 +12,7 @@ Classname management for [@odjs/dom](https://github.com/odjs/dom)
 npm i @odjs/classes
 ```
 
-*For the browser you can use one of owr [cdn](#cdn) scripts, or you can use a tool like Webpack, Browserify or Parcel.*
+*For the browser you can use one of our [cdn](#cdn) scripts, or you can use a tool like Webpack, Browserify or Parcel.*
 
 [*see usage section...*](#usage)
 
@@ -26,7 +26,7 @@ npm i @odjs/classes
 classes(...names: ClassName[]): string;
 ```
 
-*Accepts any number of [ClassName](#classname) arguments and returns normalized classname string.*
+*Accepts any number of [ClassName](#classname) arguments and returns [normalized classname](#object-normalization) string.*
 
 ***example***
 
@@ -47,29 +47,7 @@ classes(
 
 ### fromArray
 
-***syntax***
-
-```typescript
-fromArray(array: ClassName[] | ArrayLike<ClassName>): string;
-```
-
-*This method expects a single argument of type* [`ClassArray`](#classarray), *any other argument (if any) will be ignored.*
-
-***example***
-
-```javascript
-fromArray([
-  "btn",
-  ["btn-small", "btn-red"],
-  { "is-rounded": true, "is-enable": false },
-]);
-```
-
-```console
-> "btn btn-small btn-red is-rounded"
-```
-
-*See see [object normalization feature](#object-normalization) for more information.*
+*This method has been removed in* `v0.1.0` *as the same result can be achieved with the* [`classes`](#classes) *method. It is still being exposed for compatibility but it points to the* [`classes`](#classes) *method.*
 
 ### fromObj
 
@@ -79,7 +57,7 @@ fromArray([
 fromObj(object: ClassObject, mormalize?: boolean): string;
 ```
 
-*This method expects a [ClassObject](#classobject) as first and required argument, and an optional* `normalize` *argument, which set whether or not to normalize the input object. See see [object normalization feature](#object-normalization) for more information.*
+*This method expects a [ClassObject](#classobject) as first and required argument, and an optional* `normalize` *argument, which sets whether or not to normalize the input object. See see [object normalization feature](#object-normalization) for more information.*
 
 ***example***
 
@@ -169,7 +147,7 @@ element.className = classes.classes({ btn: true, red: true });
 
 ### Object Normalization
 
-*Objects with "multi-class" keys (keys that contain spaces) will be normalized, which allows to extend a "single-class" after it's been set as a "multi-class".*
+*Objects with "multi-class" keys (keys that contain spaces) will be normalized, which allows to extend a "single-class" after it's been set from a "multi-class". This behavior is enabled in* [`classes`](#classes) *method and optional in* [`fromObj`](#fromobj) *method.*
 
 ***example***
 
@@ -177,20 +155,21 @@ element.className = classes.classes({ btn: true, red: true });
 const classObj1 = {
   "btn btn-small is-rounded is-enabled": true,
 };
+
 const classObj2 = {
   "is-rounded": false,
 };
 
-console.log( classes(classObj1, classObj2) );
-console.log( fromArray([classObj1, classObj2]) );
+console.log(
+  classes(classObj1, classObj2),
+);
 ```
 
 ```console
 > "btn btn-small is-enabled"
-> "btn btn-small is-enabled"
 ```
 
-*Using this feature within a single object should work most of the times, however since key-value-pair iteration order is implementation dependent, it may lead to unpredictable results and therefore it is optional and not recommended. Pass an argument that evaluates to* `true` *to* `fromObj` *to enable optimization.*
+*Using this feature within a single object should work most of the times, however since key-value-pair iteration order is implementation dependent, it may lead to unpredictable results and therefore it is not recommended. Pass an argument that evaluates to* `true` *to* `fromObj` *to enable optimization.*
 
 ```javascript
 const classObj = {
