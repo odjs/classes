@@ -16,7 +16,8 @@
   "types": "types/index.d.ts",
   "typings": "types/index.d.ts",
   "bundlib": {
-    "min": "browser"
+    "min": "browser",
+    "equals": true
   },
   "scripts": {
     "clean": "rm -rf node_modules/.cache/bundlib node_modules/.cache/jest dist types coverage",
