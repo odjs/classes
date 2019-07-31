@@ -35,16 +35,13 @@ jobs:
       - run:
           name: Install Dependencies
           command: npm install
-      - run:
-          name: Build
-          command: npm run build
-      - run:
-          name: Run Tests
-          command: npm test
       - save_cache:
           key: v1-dep-odjs-classes-{{ checksum "package.json" }}
           paths:
             - node_modules
+      - run:
+          name: Run Tests
+          command: npm test
       - persist_to_workspace:
           root: *working_directory
           paths: .
@@ -61,6 +58,9 @@ jobs:
     executor: node
     steps:
       - attach_workspace: *attach_workspace
+      - run:
+          name: Build
+          command: npm run build
       - npm_publish
 
 workflows:
