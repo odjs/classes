@@ -1,4 +1,5 @@
-import { classes, fromObj } from "../src";
+import classes from "../src";
+import LegacyClassObject from "./legacy";
 
 test("should return classname from classname", () => {
 
@@ -60,46 +61,10 @@ test("should return classname from object", () => {
 
 });
 
-test("should return classname from object using fromObj", () => {
-
-  const classObj = { "class1": false, "class2 class3": true, "class2": false };
-  const result = fromObj(classObj);
-
-  expect(result).toBe("class2 class3");
-
-});
-
-test("should return normalized classname from object using fromObj", () => {
-
-  const classObj = { "class1": false, "class2 class3": true, "class2": false };
-  const result = fromObj(classObj, true);
-
-  expect(result).toBe("class3");
-
-});
-
-function LegacyClassObject() {
-  // @ts-ignore
-  this.class1 = true;
-}
-
-LegacyClassObject.prototype.class2 = true;
-
 test("should ignore object prototype properties using classes method", () => {
 
-  // @ts-ignore
   const classObj = new LegacyClassObject();
   const result = classes(classObj);
-
-  expect(result).toBe("class1");
-
-});
-
-test("should ignore object prototype properties using fromObj method", () => {
-
-  // @ts-ignore
-  const classObj = new LegacyClassObject();
-  const result = fromObj(classObj);
 
   expect(result).toBe("class1");
 

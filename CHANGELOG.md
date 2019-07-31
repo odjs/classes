@@ -1,5 +1,11 @@
 # @odjs/classes changelog
 
+## 1.0.0
+
+***31-JUL-2019***
+
+* export only one function as default
+
 ## 0.1.0
 
 ***26-JUL-2019***

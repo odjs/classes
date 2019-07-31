@@ -18,8 +18,6 @@ npm i @odjs/classes
 
 ## API
 
-### classes
-
 ***syntax***
 
 ```typescript
@@ -31,49 +29,21 @@ classes(...names: ClassName[]): string;
 ***example***
 
 ```javascript
-classes(
+const classname = classes(
   "btn",
   ["btn-small", "btn-red"],
   { "is-rounded has-border": true, "is-enable": false },
   { "has-border": false },
 );
+
+console.log(classname);
 ```
 
 ```console
 > "btn btn-small btn-red is-rounded"
 ```
 
-*note the* `"has-border"` *is not present in the resulting string, see [object normalization feature](#object-normalization) for more information.*
-
-### fromObj
-
-***syntax***
-
-```typescript
-fromObj(
-  object: ClassObject,
-  mormalize: boolean = false,
-): string;
-```
-
-*This method expects a [ClassObject](#classobject) as first and required argument, and an optional* `normalize` *argument, which sets whether or not to normalize the input object. See see [object normalization feature](#object-normalization) for more information.*
-
-***example***
-
-```javascript
-fromObj({
-  "btn btn-small": true,
-  "is-enabled": false,
-});
-```
-
-```console
-> "btn btn-small"
-```
-
-### fromArray
-
-*This method has been removed in* `v0.1.0` *as the same result can be achieved by the* [`classes`](#classes) *method. For compatibility it's still being exposed but it points to the* [`classes`](#classes) *method. This method will be removed in the future and therefore should not be used. Use* [`classes`](#classes) *method instead.*
+*note that* `"has-border"` *is not present in the resulting string, see [object normalization feature](#object-normalization) for more information.*
 
 ## Types
 
@@ -134,8 +104,8 @@ interface ClassArray {
 ### Node.js
 
 ```javascript
-const { classes } = require("@odjs/classes");
-element.className = classes({ btn: true, red: true });
+const classes = require("@odjs/classes");
+element.className = classes("btn", { red: true });
 ```
 
 ### Browser
@@ -143,16 +113,14 @@ element.className = classes({ btn: true, red: true });
 *After including the* `script` *tag in your html file,* `classes` *will be available globally.*
 
 ```javascript
-element.className = classes.classes("btn", { red: true });
+element.className = classes("btn", { red: true });
 ```
 
 ## Features
 
 ### Object Normalization
 
-*Objects with "multi-class" keys (keys that contain spaces) will be normalized, which allows to extend a "single-class" after it's been set from a "multi-class". It also removes any extra space in the object keys.*
-
-*This behavior is enabled in* [`classes`](#classes) *method and optional in* [`fromObj`](#fromobj) *method.*
+*Objects with "multi-class" keys (keys that contain spaces) will be normalized, which allows to extend a "single-class" after it's been set from a "multi-class". It also trims any extra space in the object keys and ignore empty keys.*
 
 ***example***
 
@@ -165,16 +133,18 @@ const classObj2 = {
   "is-rounded": false,
 };
 
-console.log(
-  classes(classObj1, classObj2),
-);
+const classname = classes(classObj1, classObj2),
+
+console.log(classname);
 ```
 
 ```console
 > "btn btn-small is-enabled"
 ```
 
-*Using this feature within a single object should work most of the times, however since key-value-pair iteration order is implementation dependent, it may lead to unpredictable results and therefore it is not recommended. Pass an argument that evaluates to* `true` *to* `fromObj` *to enable optimization.*
+*Using this feature within a single object should work most of the times, however since key-value-pair iteration order is implementation dependent, it may lead to unpredictable results and therefore it is not recommended.*
+
+***example***
 
 ```javascript
 const classObj = {
@@ -182,11 +152,13 @@ const classObj = {
   "is-rounded": false,
 };
 
-console.log( fromObj(classObj, true) );
+const classname = classes(classObj);
+
+console.log(classname);
 ```
 
 ```console
-> "btn btn-small is-enabled" > most of the times!
+> "btn btn-small is-enabled" ...most of the times!
 ```
 
 ## License

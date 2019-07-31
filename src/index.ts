@@ -1,12 +1,15 @@
-export type ClassObject = Record<string, any>;
-export type NormalizedClassObject = Record<string, boolean>;
-
+type ClassObject = Record<string, any>;
+type NormalizedClassObject = Record<string, boolean>;
 interface ClassArray extends Array<ClassName> { }
-export type ClassName = ClassArray | string | ClassObject;
+type ClassName = ClassArray | string | ClassObject | NormalizedClassObject;
 
 const hasOwn = Object.prototype.hasOwnProperty;
 
-function stringToObject(text: string, value: boolean, output: NormalizedClassObject): NormalizedClassObject {
+function parseString(
+  text: string,
+  value: boolean,
+  output: NormalizedClassObject,
+): NormalizedClassObject {
   if (text) {
     const names = text.split(" ");
     for (let i = 0, len = names.length; i < len; i++) {
@@ -18,10 +21,13 @@ function stringToObject(text: string, value: boolean, output: NormalizedClassObj
   return output;
 }
 
-function normalizeObject(object: ClassObject, output: NormalizedClassObject): NormalizedClassObject {
+function normalize(
+  object: ClassObject,
+  output: NormalizedClassObject,
+): NormalizedClassObject {
   for (const key in object) {
     if (hasOwn.call(object, key)) {
-      stringToObject(
+      parseString(
         key,
         !!object[key],
         output,
@@ -31,44 +37,41 @@ function normalizeObject(object: ClassObject, output: NormalizedClassObject): No
   return output;
 }
 
-function arrayToObject(array: ClassArray | ArrayLike<ClassName>, output: NormalizedClassObject): NormalizedClassObject {
+function parseArray(
+  array: ClassName[] | ArrayLike<ClassName>,
+  output: NormalizedClassObject,
+): NormalizedClassObject {
   for (let i = 0, len = array.length; i < len; i++) {
     const clnm = array[i];
     if (Array.isArray(clnm)) {
-      arrayToObject(clnm, output);
+      parseArray(clnm, output);
     } else if (typeof clnm === "object") {
-      normalizeObject(clnm, output);
+      normalize(clnm, output);
     } else {
-      stringToObject(clnm, true, output);
+      parseString(clnm, true, output);
     }
   }
   return output;
 }
 
-export function fromObj(object: ClassObject, normalize?: boolean): string {
-  if (normalize) {
-    object = normalizeObject(object, {});
-  }
+function stringify(object: ClassObject): string {
   let result: string = "";
-  for (const key in object) {
-    if (hasOwn.call(object, key) && object[key]) {
-      if (result) {
-        result += " ";
-      }
-      result += key;
+  for (const classname in object) {
+    if (hasOwn.call(object, classname) && object[classname]) {
+      result = result ? `${result} ${classname}` : classname;
     }
   }
   return result;
 }
 
-export function classes(...names: ClassName[]): string;
-export function classes(): string {
-  return fromObj(
-    arrayToObject(
-      arguments,
+function classes(...names: ClassName[]): string;
+function classes(): string {
+  return stringify(
+    parseArray(
+      arguments as ArrayLike<ClassName>,
       {},
     ),
   );
 }
 
-export { classes as fromArray };
+export default classes;
