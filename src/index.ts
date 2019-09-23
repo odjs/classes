@@ -1,7 +1,8 @@
+type IsClassPresent = (current: NormalizedClassObject) => any;
 type ClassObject = Record<string, any>;
 type NormalizedClassObject = Record<string, boolean>;
-interface ClassArray extends Array<ClassName> { }
 type ClassName = ClassArray | string | ClassObject | NormalizedClassObject;
+interface ClassArray extends Array<ClassName> { }
 
 const hasOwn = Object.prototype.hasOwnProperty;
 
@@ -27,9 +28,13 @@ function normalize(
 ): NormalizedClassObject {
   for (const key in object) {
     if (hasOwn.call(object, key)) {
+      let value = object[key];
+      if (typeof value === "function") {
+        value = (value as IsClassPresent)({ ...output });
+      }
       parseString(
         key,
-        !!object[key],
+        !!value,
         output,
       );
     }

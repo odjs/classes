@@ -1,11 +1,12 @@
 # @odjs/classes changelog
 
-## 1.0.1
+## 1.1.0
 
 ***23-SEP-2019***
 
 * dependencies updated
 * improved documentation
+* class object value as a function
 
 ## 1.0.0
 

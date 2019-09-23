@@ -33,7 +33,7 @@ const classname = classes(
   "btn",
   ["is-small", "is-red", "is-enable"],
   {
-    "is-rounded has-border": true,
+    "is-rounded has-border": (current) => current["is-enable"],
     "is-enable": false,
   },
   { "has-border": false },
@@ -59,10 +59,14 @@ type ClassName = string | ClassObject | ClassArray;
 ### ClassObject
 
 ```typescript
+type IsClassPresent = (current: { [key: string]: boolean }) => any;
+
 interface ClassObject {
-  [key: string]: any;
+  [key: string]: IsClassPresent | any;
 }
 ```
+
+*see [Conditional Class](#conditional-class) for more info.*
 
 ### ClassArray
 
@@ -119,6 +123,30 @@ element.className = classes("btn", { red: true });
 element.className = classes("btn", { red: true });
 ```
 
+## Iteration Order
+
+*Object key iteration order is implementation dependent, which means there are no guarantees the iteration will happen in the order you declared them.*
+
+***example***
+
+```javascript
+// BAD IDEA
+
+classes({
+  "btn is-red": true,
+  "is-red": false,
+});
+```
+
+*use the following code for a predictable result.*
+
+```javascript
+classes(
+  "btn is-red",
+  { "is-red": false }
+);
+```
+
 ## Features
 
 ### Object Normalization
@@ -152,12 +180,11 @@ console.log(classname);
 > "btn is-enabled is-medium"
 ```
 
-*Using this feature within a single object should work most of the times, however since key-value-pair iteration order is implementation dependent, it may lead to unpredictable results and therefore it is not recommended. Use an array or different objects intead.*
+*Using this feature within a single is a bad idea. see [Iteration Order](#iteration-order) for more info. However, it will work most of the times.*
 
 ***example***
 
 ```javascript
-
 // this is a bad idea
 const classObj = {
   "button is-rounded is-enabled": true,
@@ -193,6 +220,55 @@ console.log(classname);
 > "button is-enabled"
 
 ...always!
+```
+
+### Conditional Class
+
+*When using a [ClassObject](#classobject) the object key will be used as classname and the value will determine whether that classname should be present in the final result. If the value if a function, it will be called with an object as only argument containing the current normalized state of the result.*
+
+> *:warning:* ***DO NOT*** *rely on classnames within the same object to be included in the normalized object. see [Iteration Order](#iteration-order) for more info.*
+
+***example***
+
+```javascript
+const classname = classes(
+  "button is-enabled",
+  "is-rounded",
+  {
+    "is-rounded": (current) => {
+      // current = {
+      //   button: true,
+      //   "is-enabled": true
+      //   "is-rounded": true
+      // }
+
+      // note: is-rounded = true
+
+      // returning undefined will case
+      // the classname to be set to false
+    }
+  },
+  {
+    "is-red": (current) => {
+      // current = {
+      //   button: true,
+      //   "is-enabled": true
+      //   "is-rounded": false
+      // }
+
+      // note: is-rounded = false
+      // precause it was set to false in the previous step
+
+      return current["is-enabled"]
+    },
+  }
+);
+
+console.log(classname);
+```
+
+```console
+> "button is-enabled is-red"
 ```
 
 ## License
