@@ -5,6 +5,7 @@
 ***23-SEP-2019***
 
 * dependencies updated
+* improved documentation
 
 ## 1.0.0
 

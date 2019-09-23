@@ -31,8 +31,11 @@ classes(...names: ClassName[]): string;
 ```javascript
 const classname = classes(
   "btn",
-  ["btn-small", "btn-red"],
-  { "is-rounded has-border": true, "is-enable": false },
+  ["is-small", "is-red", "is-enable"],
+  {
+    "is-rounded has-border": true,
+    "is-enable": false,
+  },
   { "has-border": false },
 );
 
@@ -40,7 +43,7 @@ console.log(classname);
 ```
 
 ```console
-> "btn btn-small btn-red is-rounded"
+> "btn is-small is-red is-rounded"
 ```
 
 *note that* `"has-border"` *is not present in the resulting string, see [object normalization feature](#object-normalization) for more information.*
@@ -120,35 +123,44 @@ element.className = classes("btn", { red: true });
 
 ### Object Normalization
 
-*Objects with "multi-class" keys (keys that contain spaces) will be normalized, which allows to extend a "single-class" after it's been set from a "multi-class". It also trims any extra space in the object keys and ignore empty keys.*
+*Objects with "multi-class" keys (keys that contain spaces) and "multi-class" strings will be normalized, which allows to extend a "single-class" after it's been set from a "multi-class". It also trims any extra space in the object keys and ignore empty keys.*
 
 ***example***
 
 ```javascript
-const classObj1 = {
-  "btn btn-small is-rounded is-enabled": true,
+const classes1 = "btn is-small is-rounded is-enabled";
+
+const classes2 = {
+  "is-small": false,
+  "is-medium": true,
 };
 
-const classObj2 = {
+const classes3 = {
   "is-rounded": false,
 };
 
-const classname = classes(classObj1, classObj2),
+const classname = classes(
+  classes1,
+  classes2,
+  classes3,
+),
 
 console.log(classname);
 ```
 
 ```console
-> "btn btn-small is-enabled"
+> "btn is-enabled is-medium"
 ```
 
-*Using this feature within a single object should work most of the times, however since key-value-pair iteration order is implementation dependent, it may lead to unpredictable results and therefore it is not recommended.*
+*Using this feature within a single object should work most of the times, however since key-value-pair iteration order is implementation dependent, it may lead to unpredictable results and therefore it is not recommended. Use an array or different objects intead.*
 
 ***example***
 
 ```javascript
+
+// this is a bad idea
 const classObj = {
-  "btn btn-small is-rounded is-enabled": true,
+  "button is-rounded is-enabled": true,
   "is-rounded": false,
 };
 
@@ -158,7 +170,29 @@ console.log(classname);
 ```
 
 ```console
-> "btn btn-small is-enabled" ...most of the times!
+> "button is-enabled"
+
+...most of the times!
+```
+
+*Use the following code for a predictable result.*
+
+```javascript
+const base = "button is-rounded is-enabled";
+
+const cond = {
+  "is-rounded": false,
+};
+
+const classname = classes(base, cond);
+
+console.log(classname);
+```
+
+```console
+> "button is-enabled"
+
+...always!
 ```
 
 ## License
