@@ -1,5 +1,11 @@
 # @odjs/classes changelog
 
+## 1.0.1
+
+***23-SEP-2019***
+
+* dependencies updated
+
 ## 1.0.0
 
 ***31-JUL-2019***
