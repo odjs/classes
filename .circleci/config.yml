@@ -54,7 +54,7 @@ jobs:
       - codecov/upload:
           file: coverage/*.json
 
-  publish_pkg:
+  build_and_publish:
     executor: node
     steps:
       - attach_workspace: *attach_workspace
@@ -83,7 +83,7 @@ workflows:
             branches:
               only: /master/
 
-      - publish_pkg:
+      - build_and_publish:
           context: npm
           requires:
             - unit_test
