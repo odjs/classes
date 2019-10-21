@@ -30,7 +30,7 @@
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.5",
-    "bundlib": "^0.12.6",
+    "bundlib": "^0.13.0",
     "chokidar": "^3.1.1",
     "eslint": "^6.4.0",
     "jest": "^24.9.0",
