@@ -7,15 +7,15 @@ interface ClassArray extends Array<ClassName> { }
 
 const hasOwn = {}.hasOwnProperty;
 
-function parseString(text: string, value: boolean, output: NormalizedClassObject): NormalizedClassObject {
+function parseString(str: string, value: boolean, output: NormalizedClassObject): NormalizedClassObject {
 
-  if (text) {
+  if (str) {
 
-    const names = text.split(" ");
+    const classnames = str.split(" ");
 
-    for (let i = 0, len = names.length; i < len; i++) {
-      if (names[i]) {
-        output[names[i]] = value;
+    for (let i = 0, len = classnames.length; i < len; i++) {
+      if (classnames[i]) {
+        output[classnames[i]] = value;
       }
     }
 
@@ -49,18 +49,18 @@ function normalize(object: ClassObject, output: NormalizedClassObject): Normaliz
 
 }
 
-function parseArray(array: ClassName[] | ArrayLike<ClassName>, output: NormalizedClassObject): NormalizedClassObject {
+function parseArray(array: ArrayLike<ClassName>, output: NormalizedClassObject): NormalizedClassObject {
 
   for (let i = 0, len = array.length; i < len; i++) {
 
-    const clnm = array[i];
+    const value = array[i];
 
-    if (Array.isArray(clnm)) {
-      parseArray(clnm, output);
-    } else if (typeof clnm === "object") {
-      normalize(clnm, output);
+    if (Array.isArray(value)) {
+      parseArray(value, output);
+    } else if (value && typeof value === "object") {
+      normalize(value, output);
     } else {
-      parseString(clnm, true, output);
+      parseString(`${value}`, true, output);
     }
 
   }
@@ -83,7 +83,7 @@ function stringify(object: ClassObject): string {
 
 }
 
-function classes(...names: ClassName[]): string;
+function classes(...classnames: ClassName[]): string;
 function classes(): string {
   return stringify(
     parseArray(
