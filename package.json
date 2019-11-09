@@ -21,7 +21,7 @@
   },
   "scripts": {
     "clean": "rm -rf node_modules/.cache/bundlib node_modules/.cache/jest dist types coverage",
-    "lint": "tslint src/**/*.ts",
+    "lint": "eslint src/** test/**",
     "dev": "bundlib -dw",
     "build": "npm run lint && bundlib -d",
     "test": "jest --color -w 3",
@@ -30,6 +30,8 @@
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.5",
+    "@typescript-eslint/eslint-plugin": "^2.6.1",
+    "@typescript-eslint/parser": "^2.6.1",
     "bundlib": "^0.13.0",
     "chokidar": "^3.1.1",
     "eslint": "^6.4.0",

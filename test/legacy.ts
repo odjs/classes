@@ -10,7 +10,7 @@ interface LegacyClassObjectConstructor {
   new(): LegacyClassObjectInstance;
 }
 
-function LegacyClassObject(this: LegacyClassObjectInstance) {
+function LegacyClassObject(this: LegacyClassObjectInstance): void {
   this.class1 = true;
 }
 
