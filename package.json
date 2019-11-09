@@ -20,12 +20,12 @@
     "equals": true
   },
   "scripts": {
+    "dev": "bundlib -dw",
+    "build": "bundlib -d",
+    "test": "jest --color -w 3",
     "clean": "rimraf node_modules/.cache/bundlib node_modules/.cache/jest dist types coverage",
     "lint": "eslint src/** test/**",
-    "dev": "bundlib -dw",
-    "build": "npm run lint && bundlib -d",
-    "test": "jest --color -w 3",
-    "preversion": "npm run clean && npm run build && npm test",
+    "prerelease": "npm run clean && npm run lint && npm test && npm run build",
     "release": "standard-version"
   },
   "devDependencies": {
