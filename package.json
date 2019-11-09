@@ -20,7 +20,7 @@
     "equals": true
   },
   "scripts": {
-    "clean": "rm -rf node_modules/.cache/bundlib node_modules/.cache/jest dist types coverage",
+    "clean": "rimraf node_modules/.cache/bundlib node_modules/.cache/jest dist types coverage",
     "lint": "eslint src/** test/**",
     "dev": "bundlib -dw",
     "build": "npm run lint && bundlib -d",
@@ -37,6 +37,7 @@
     "chokidar": "^3.1.1",
     "eslint": "^6.4.0",
     "jest": "^24.9.0",
+    "rimraf": "^3.0.0",
     "standard-version": "^7.0.0",
     "ts-jest": "^24.1.0",
     "typescript": "^3.6.3"
