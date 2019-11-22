@@ -5,23 +5,23 @@ type ClassName = ClassArray | string | ClassObject | NormalizedClassObject;
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ClassArray extends Array<ClassName> { }
 
-const hasOwn = {}.hasOwnProperty;
+const hasOwn = {}.hasOwnProperty
 
 function parseString(str: string, value: boolean, output: NormalizedClassObject): NormalizedClassObject {
 
   if (str) {
 
-    const classnames = str.split(" ");
+    const classnames = str.split(' ')
 
     for (let i = 0, len = classnames.length; i < len; i++) {
       if (classnames[i]) {
-        output[classnames[i]] = value;
+        output[classnames[i]] = value
       }
     }
 
   }
 
-  return output;
+  return output
 
 }
 
@@ -30,22 +30,22 @@ function normalize(object: ClassObject, output: NormalizedClassObject): Normaliz
   for (const key in object) {
     if (hasOwn.call(object, key)) {
 
-      let value = object[key];
+      let value = object[key]
 
-      if (typeof value === "function") {
-        value = (value as IsClassPresent)({ ...output });
+      if (typeof value === 'function') {
+        value = (value as IsClassPresent)({ ...output })
       }
 
       parseString(
         key,
         !!value,
         output,
-      );
+      )
 
     }
   }
 
-  return output;
+  return output
 
 }
 
@@ -53,33 +53,33 @@ function parseArray(array: ArrayLike<ClassName>, output: NormalizedClassObject):
 
   for (let i = 0, len = array.length; i < len; i++) {
 
-    const value = array[i];
+    const value = array[i]
 
     if (Array.isArray(value)) {
-      parseArray(value, output);
-    } else if (value && typeof value === "object") {
-      normalize(value, output);
+      parseArray(value, output)
+    } else if (value && typeof value === 'object') {
+      normalize(value, output)
     } else {
-      parseString(`${value}`, true, output);
+      parseString(`${value}`, true, output)
     }
 
   }
 
-  return output;
+  return output
 
 }
 
 function stringify(object: ClassObject): string {
 
-  let result = "";
+  let result = ''
 
   for (const classname in object) {
     if (hasOwn.call(object, classname) && object[classname]) {
-      result = result ? `${result} ${classname}` : classname;
+      result = result ? `${result} ${classname}` : classname
     }
   }
 
-  return result;
+  return result
 
 }
 
@@ -91,7 +91,7 @@ function classes(): string {
       arguments as ArrayLike<ClassName>,
       {},
     ),
-  );
+  )
 }
 
-export default classes;
+export default classes
