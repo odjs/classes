@@ -1,4 +1,3 @@
-import LegacyClassObject from "./legacy";
 import { sorted } from "./sorted";
 
 test("should return classname from object", () => {
@@ -37,11 +36,25 @@ test("should receive current normalized object", () => {
 
 });
 
-test("should ignore object prototype properties using classes method", () => {
+test("should ignore object prototype properties", () => {
 
-  const classObj = new LegacyClassObject();
+  interface ClassObjectInstance {
+    instanceClass: boolean;
+    prototypeClass: boolean;
+  }
+
+  function ClassObject(this: ClassObjectInstance): void {
+    this.instanceClass = true;
+  }
+
+  ClassObject.prototype.prototypeClass = true;
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // @ts-ignore
+  const classObj: ClassObjectInstance = new ClassObject();
   const result = sorted(classObj);
 
-  expect(result).toBe("class1");
+  expect(classObj.prototypeClass).toBe(true);
+  expect(result).toBe("instanceClass");
 
 });
