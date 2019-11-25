@@ -1,10 +1,11 @@
-type IsClassPresent = (current: NormalizedClassObject) => any;
-type ClassObject = Record<string, any>;
-type NormalizedClassObject = Record<string, boolean>;
-type ClassName = ClassArray | string | ClassObject | NormalizedClassObject;
+type IsClassPresent = (current: NormalizedClassObject) => any
+type ClassObject = Record<string, any>
+type NormalizedClassObject = Record<string, boolean>
+type ClassName = ClassArray | string | ClassObject | NormalizedClassObject
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ClassArray extends Array<ClassName> { }
 
+// eslint-disable-next-line @typescript-eslint/unbound-method
 const hasOwn = {}.hasOwnProperty
 
 function parseString(str: string, value: boolean, output: NormalizedClassObject): NormalizedClassObject {
