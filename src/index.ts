@@ -4,93 +4,68 @@ type NormalizedClassObject = Record<string, boolean>
 type ClassName = ClassArray | string | ClassObject | NormalizedClassObject
 type ClassArray = Array<ClassName>
 
-// eslint-disable-next-line @typescript-eslint/unbound-method
-const hasOwn = {}.hasOwnProperty
+function each<V, R>(obj: Record<string, V>, cb: (val: V, key: string) => void): void
+function each<V, R>(obj: Record<string, V>, cb: (val: V, key: string, out: R) => R, out: R): R
+function each<V, R>(obj: Record<string, V>, cb: (val: V, key: string, out?: R) => R | undefined, out?: R): R | void {
+  for (const key in obj) {
+    if ({}.hasOwnProperty.call(obj, key)) {
+      out = cb(obj[key], key, out)
+    }
+  }
+  return out
+}
 
-function normString(str: string, value: boolean, output: NormalizedClassObject): NormalizedClassObject {
-
+function normString(str: string, val: boolean, out: NormalizedClassObject): NormalizedClassObject {
   if (str) {
-
     const cns = str.split(' ')
-
-    for (let i = 0, len = cns.length; i < len; i++) {
+    const { length: len } = cns
+    for (let i = 0; i < len; i++) {
       if (cns[i]) {
-        output[cns[i]] = value
+        out[cns[i]] = val
       }
     }
-
   }
-
-  return output
-
+  return out
 }
 
-function normObj(object: ClassObject, output: NormalizedClassObject): NormalizedClassObject {
-
-  for (const key in object) {
-    if (hasOwn.call(object, key)) {
-
-      let value = object[key]
-
-      if (typeof value === 'function') {
-        value = (value as IsClassPresent)({ ...output })
-      }
-
-      normString(
-        key,
-        !!value,
-        output,
-      )
-
-    }
-  }
-
-  return output
-
-}
-
-function normArray(array: ArrayLike<ClassName>, output: NormalizedClassObject): NormalizedClassObject {
-
-  for (let i = 0, len = array.length; i < len; i++) {
-
-    const value = array[i]
-
+function normArray(arr: ArrayLike<ClassName>, out: NormalizedClassObject): NormalizedClassObject {
+  const { length: len } = arr
+  for (let i = 0; i < len; i++) {
+    const value = arr[i]
     if (Array.isArray(value)) {
-      normArray(value, output)
+      normArray(value, out)
     } else if (value && typeof value === 'object') {
-      normObj(value, output)
+      each(value, (value, key) => {
+        normString(
+          key,
+          !!(
+            typeof value !== 'function' ? value : (value as IsClassPresent)(
+              each(out, (value, key, r) => {
+                r[key] = value
+                return r
+              }, {} as NormalizedClassObject),
+            )
+          ),
+          out,
+        )
+      })
     } else {
-      normString(`${value}`, true, output)
-    }
-
-  }
-
-  return output
-
-}
-
-function stringify(object: ClassObject): string {
-
-  let result = ''
-
-  for (const cn in object) {
-    if (hasOwn.call(object, cn) && object[cn]) {
-      result = result ? `${result} ${cn}` : cn
+      normString(`${value}`, true, out)
     }
   }
-
-  return result
-
+  return out
 }
 
 function classes(...classnames: ClassName[]): string;
 function classes(): string {
-  return stringify(
+  return each(
     normArray(
       // eslint-disable-next-line prefer-rest-params
       arguments as ArrayLike<ClassName>,
       {},
     ),
+    (incl, cn, res) => !incl ? res : res ? `${res} ${cn}` : cn,
+    '',
   )
 }
 
