@@ -23,6 +23,7 @@
     "dev": "bundlib -dw",
     "build": "bundlib -d",
     "test": "jest --color -w 3",
+    "test:watch": "npm test -- --watch-all",
     "clean": "rimraf node_modules/.cache/bundlib node_modules/.cache/jest dist types coverage",
     "lint": "eslint src/** __test__/**",
     "prerelease": "npm run clean && npm run lint && npm test && npm run build",
