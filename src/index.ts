@@ -1,22 +1,21 @@
-type IsClassPresent = (current: NormalizedClassObject) => any
-type ClassObject = Record<string, any>
+type IsClassPresent = (current: NormalizedClassObject) => unknown
+type ClassObject = Record<string, IsClassPresent | unknown>
 type NormalizedClassObject = Record<string, boolean>
 type ClassName = ClassArray | string | ClassObject | NormalizedClassObject
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ClassArray extends Array<ClassName> { }
+type ClassArray = Array<ClassName>
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const hasOwn = {}.hasOwnProperty
 
-function parseString(str: string, value: boolean, output: NormalizedClassObject): NormalizedClassObject {
+function normString(str: string, value: boolean, output: NormalizedClassObject): NormalizedClassObject {
 
   if (str) {
 
-    const classnames = str.split(' ')
+    const cns = str.split(' ')
 
-    for (let i = 0, len = classnames.length; i < len; i++) {
-      if (classnames[i]) {
-        output[classnames[i]] = value
+    for (let i = 0, len = cns.length; i < len; i++) {
+      if (cns[i]) {
+        output[cns[i]] = value
       }
     }
 
@@ -26,7 +25,7 @@ function parseString(str: string, value: boolean, output: NormalizedClassObject)
 
 }
 
-function normalize(object: ClassObject, output: NormalizedClassObject): NormalizedClassObject {
+function normObj(object: ClassObject, output: NormalizedClassObject): NormalizedClassObject {
 
   for (const key in object) {
     if (hasOwn.call(object, key)) {
@@ -37,7 +36,7 @@ function normalize(object: ClassObject, output: NormalizedClassObject): Normaliz
         value = (value as IsClassPresent)({ ...output })
       }
 
-      parseString(
+      normString(
         key,
         !!value,
         output,
@@ -50,18 +49,18 @@ function normalize(object: ClassObject, output: NormalizedClassObject): Normaliz
 
 }
 
-function parseArray(array: ArrayLike<ClassName>, output: NormalizedClassObject): NormalizedClassObject {
+function normArray(array: ArrayLike<ClassName>, output: NormalizedClassObject): NormalizedClassObject {
 
   for (let i = 0, len = array.length; i < len; i++) {
 
     const value = array[i]
 
     if (Array.isArray(value)) {
-      parseArray(value, output)
+      normArray(value, output)
     } else if (value && typeof value === 'object') {
-      normalize(value, output)
+      normObj(value, output)
     } else {
-      parseString(`${value}`, true, output)
+      normString(`${value}`, true, output)
     }
 
   }
@@ -74,9 +73,9 @@ function stringify(object: ClassObject): string {
 
   let result = ''
 
-  for (const classname in object) {
-    if (hasOwn.call(object, classname) && object[classname]) {
-      result = result ? `${result} ${classname}` : classname
+  for (const cn in object) {
+    if (hasOwn.call(object, cn) && object[cn]) {
+      result = result ? `${result} ${cn}` : cn
     }
   }
 
@@ -87,7 +86,7 @@ function stringify(object: ClassObject): string {
 function classes(...classnames: ClassName[]): string;
 function classes(): string {
   return stringify(
-    parseArray(
+    normArray(
       // eslint-disable-next-line prefer-rest-params
       arguments as ArrayLike<ClassName>,
       {},

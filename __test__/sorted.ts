@@ -1,8 +1,6 @@
-import classes from '../src'
+import unsorted from '../src'
 
-type ClassNames = Parameters<typeof classes>;
-
-export function sorted(...names: ClassNames): string {
-  const result = classes(...names)
+export function classes(...names: Parameters<typeof unsorted>): string {
+  const result = unsorted(...names)
   return result ? result.split(' ').sort().join(' ') : result
 }
