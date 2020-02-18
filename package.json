@@ -10,8 +10,8 @@
     "classname",
     "classnames"
   ],
-  "main": "dist/classes.cjs.js",
-  "module": "dist/classes.es.js",
+  "main": "dist/classes.js",
+  "module": "dist/classes.mjs",
   "browser": "dist/classes.umd.js",
   "types": "types/index.d.ts",
   "typings": "types/index.d.ts",
