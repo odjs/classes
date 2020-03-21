@@ -1,26 +1,26 @@
-const CI = process.env.CI;
+const CI = process.env.CI
 
 module.exports = {
 
-  testEnvironment: "node",
+  testEnvironment: 'node',
   browser: false,
 
-  cacheDirectory: "node_modules/.cache/jest",
+  cacheDirectory: 'node_modules/.cache/jest',
 
-  preset: "ts-jest",
+  preset: 'ts-jest',
 
   collectCoverage: true,
   collectCoverageFrom: [
-    "src/**/*.ts",
+    'src/**/*.ts',
   ],
-  coverageDirectory: "coverage",
+  coverageDirectory: 'coverage',
   coverageReporters: [
-    CI ? "json" : "lcov",
-    "text",
-    "text-summary",
+    CI ? 'json' : 'lcov',
+    'text',
+    'text-summary',
   ],
   coverageThreshold: null,
 
   verbose: true,
 
-};
+}
