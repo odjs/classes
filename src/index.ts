@@ -1,39 +1,39 @@
-type IsClassPresent = (current: NormalizedClassObject) => unknown
-type ClassObject = Record<string, IsClassPresent | unknown>
-type NormalizedClassObject = Record<string, boolean>
-type ClassName = ClassArray | string | ClassObject | NormalizedClassObject
-type ClassArray = Array<ClassName>
+type IsClassPresent = (current: NormalizedClassObject) => unknown;
+type ClassObject = Record<string, IsClassPresent | unknown>;
+type NormalizedClassObject = Record<string, boolean>;
+type ClassName = ClassArray | string | ClassObject | NormalizedClassObject;
+type ClassArray = Array<ClassName>;
 
-function each<V, R>(obj: Record<string, V>, cb: (val: V, key: string) => void): void
-function each<V, R>(obj: Record<string, V>, cb: (val: V, key: string, out: R) => R, out: R): R
+function each<V, R>(obj: Record<string, V>, cb: (val: V, key: string) => void): void;
+function each<V, R>(obj: Record<string, V>, cb: (val: V, key: string, out: R) => R, out: R): R;
 function each<V, R>(obj: Record<string, V>, cb: (val: V, key: string, out?: R) => R | undefined, out?: R): R | void {
   for (const key in obj) {
     if ({}.hasOwnProperty.call(obj, key)) {
-      out = cb(obj[key], key, out)
+      out = cb(obj[key], key, out);
     }
   }
-  return out
+  return out;
 }
 
 function normString(str: string, val: boolean, out: NormalizedClassObject): NormalizedClassObject {
   if (str) {
-    const cns = str.split(' ')
-    const { length: len } = cns
+    const cns = str.split(' ');
+    const { length: len } = cns;
     for (let i = 0; i < len; i++) {
       if (cns[i]) {
-        out[cns[i]] = val
+        out[cns[i]] = val;
       }
     }
   }
-  return out
+  return out;
 }
 
 function normArray(arr: ArrayLike<ClassName>, out: NormalizedClassObject): NormalizedClassObject {
-  const { length: len } = arr
+  const { length: len } = arr;
   for (let i = 0; i < len; i++) {
-    const value = arr[i]
+    const value = arr[i];
     if (Array.isArray(value)) {
-      normArray(value, out)
+      normArray(value, out);
     } else if (value && typeof value === 'object') {
       each(value, (value, key) => {
         normString(
@@ -41,19 +41,19 @@ function normArray(arr: ArrayLike<ClassName>, out: NormalizedClassObject): Norma
           !!(
             typeof value !== 'function' ? value : (value as IsClassPresent)(
               each(out, (value, key, r) => {
-                r[key] = value
-                return r
+                r[key] = value;
+                return r;
               }, {} as NormalizedClassObject),
             )
           ),
           out,
-        )
-      })
+        );
+      });
     } else {
-      normString(`${value}`, true, out)
+      normString(`${value}`, true, out);
     }
   }
-  return out
+  return out;
 }
 
 function classes(...classnames: ClassName[]): string;
@@ -66,7 +66,7 @@ function classes(): string {
     ),
     (incl, cn, res) => !incl ? res : res ? `${res} ${cn}` : cn,
     '',
-  )
+  );
 }
 
-export default classes
+export default classes;

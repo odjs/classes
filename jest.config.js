@@ -14,8 +14,7 @@ module.exports = {
     'text',
     'text-summary',
   ],
-  coverageThreshold: null,
 
   verbose: true,
 
-}
+};
