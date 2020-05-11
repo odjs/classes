@@ -15,6 +15,10 @@ module.exports = {
     'text-summary',
   ],
 
+  testMatch: [
+    '**/__test__/**/*.test.ts',
+  ],
+
   verbose: true,
 
 };
