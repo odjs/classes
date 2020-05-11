@@ -15,9 +15,6 @@
   "browser": "dist/classes.umd.js",
   "types": "types/index.d.ts",
   "typings": "types/index.d.ts",
-  "bundlib": {
-    "min": "browser"
-  },
   "scripts": {
     "dev": "bundlib -dw",
     "build": "bundlib -d",
