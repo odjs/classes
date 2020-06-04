@@ -20,7 +20,7 @@ test('should call function in object', () => {
 
 test('should receive current normalized object', () => {
 
-  const ifClass5 = jest.fn((curr) => curr.class5);
+  const ifClass5 = jest.fn((curr: Record<string, unknown>) => curr.class5);
 
   const classObj1 = { 'class2 class3': ifClass5 };
   const classObj2 = { class4: false };
@@ -32,24 +32,12 @@ test('should receive current normalized object', () => {
 
 test('should ignore object prototype properties', () => {
 
-  interface ClassObjectInstance {
-    instanceClass: boolean;
-    prototypeClass: boolean;
-  }
-
-  function ClassObject(this: ClassObjectInstance): void {
-    this.instanceClass = true;
-  }
-
-  ClassObject.prototype.prototypeClass = true;
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-  // @ts-ignore
-  const classObj: ClassObjectInstance = new ClassObject();
+  const classObj = Object.assign(
+    Object.create({ prototypeClass: true }),
+    { instanceClass: true },
+  ) as { prototypeClass: true, instanceClass: true };
 
   expect(classObj.prototypeClass).toBe(true);
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-  // @ts-ignore
   expect(classes(classObj)).toBe('instanceClass');
 
 });
