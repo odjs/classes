@@ -4,7 +4,7 @@ type NormalizedClassObject = Record<string, boolean>;
 type ClassName = ClassArray | string | ClassObject | NormalizedClassObject;
 type ClassArray = Array<ClassName>;
 
-function each<V, R>(obj: Record<string, V>, cb: (val: V, key: string) => void): void;
+function each<V>(obj: Record<string, V>, cb: (val: V, key: string) => void): void;
 function each<V, R>(obj: Record<string, V>, cb: (val: V, key: string, out: R) => R, out: R): R;
 function each<V, R>(obj: Record<string, V>, cb: (val: V, key: string, out?: R) => R | undefined, out?: R): R | void {
   for (const key in obj) {
