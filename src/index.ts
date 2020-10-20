@@ -1,4 +1,4 @@
-type IsClassPresent = (current: NormalizedClassObject) => unknown;
+type IsClassPresent = (current: NormalizedClassObject, classnames: string[]) => unknown;
 type ClassObject = Record<string, IsClassPresent | unknown>;
 type NormalizedClassObject = Record<string, boolean>;
 type ClassName = ClassArray | string | ClassObject | NormalizedClassObject;
@@ -36,17 +36,18 @@ function normArray(arr: ArrayLike<ClassName>, out: NormalizedClassObject): Norma
       normArray(value, out);
     } else if (value && typeof value === 'object') {
       let current: Record<string, boolean> | undefined;
-      each(value, (value, key) => {
+      each(value, (value2, key) => {
         normString(
           key,
           !!(
-            typeof value !== 'function' ? value : (value as IsClassPresent)(
+            typeof value2 !== 'function' ? value2 : (value2 as IsClassPresent)(
               current || (
                 current = each<boolean, NormalizedClassObject>(out, (value, key, r) => {
                   r[key] = value;
                   return r;
                 }, {})
               ),
+              key ? key.split(' ') : [],
             )
           ),
           out,

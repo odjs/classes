@@ -1,6 +1,6 @@
 # @odjs/classes
 
-[![CircleCI](https://circleci.com/gh/odjs/classes.svg?style=svg)](https://circleci.com/gh/odjs/classes) [![dependabot](https://api.dependabot.com/badges/status?host=github&repo=odjs/classes)](https://dependabot.com) [![npm](https://badgen.net/npm/v/@odjs/classes)](https://www.npmjs.com/package/@odjs/classes) [![codecov](https://codecov.io/gh/odjs/classes/branch/master/graph/badge.svg)](https://codecov.io/gh/odjs/classes) [![jsDelivr](https://data.jsdelivr.com/v1/package/npm/@odjs/classes/badge?style=rounded)](https://www.jsdelivr.com/package/npm/@odjs/classes) [![dependencies](https://badgen.net/david/dep/odjs/classes)](https://david-dm.org/odjs/classes) [![dev dependencies](https://badgen.net/david/dev/odjs/classes)](https://david-dm.org/odjs/classes?type=dev) [![packagephobia](https://badgen.net/packagephobia/install/@odjs/classes)](https://packagephobia.now.sh/result?p=@odjs/classes) [![bundlephobia](https://badgen.net/bundlephobia/min/@odjs/classes)](https://bundlephobia.com/result?p=@odjs/classes) [![types](https://img.shields.io/npm/types/@odjs/classes.svg)](https://github.com/microsoft/typescript) [![Known Vulnerabilities](https://snyk.io/test/github/odjs/classes/badge.svg?targetFile=package.json)](https://snyk.io/test/github/odjs/classes?targetFile=package.json) [![license](https://badgen.net/github/license/odjs/classes)](LICENSE)
+[![CircleCI](https://circleci.com/gh/odjs/classes.svg?style=svg)](https://circleci.com/gh/odjs/classes) [![npm](https://badgen.net/npm/v/@odjs/classes)](https://www.npmjs.com/package/@odjs/classes) [![codecov](https://codecov.io/gh/odjs/classes/branch/master/graph/badge.svg)](https://codecov.io/gh/odjs/classes) [![jsDelivr](https://data.jsdelivr.com/v1/package/npm/@odjs/classes/badge?style=rounded)](https://www.jsdelivr.com/package/npm/@odjs/classes) [![dependencies](https://badgen.net/david/dep/odjs/classes)](https://david-dm.org/odjs/classes) [![dev dependencies](https://badgen.net/david/dev/odjs/classes)](https://david-dm.org/odjs/classes?type=dev) [![packagephobia](https://badgen.net/packagephobia/install/@odjs/classes)](https://packagephobia.now.sh/result?p=@odjs/classes) [![bundlephobia](https://badgen.net/bundlephobia/min/@odjs/classes)](https://bundlephobia.com/result?p=@odjs/classes) [![types](https://img.shields.io/npm/types/@odjs/classes.svg)](https://github.com/microsoft/typescript) [![Known Vulnerabilities](https://snyk.io/test/github/odjs/classes/badge.svg?targetFile=package.json)](https://snyk.io/test/github/odjs/classes?targetFile=package.json) [![license](https://badgen.net/github/license/odjs/classes)](LICENSE)
 
 Classname management for [@odjs/dom](https://github.com/odjs/dom)
 
@@ -138,7 +138,7 @@ classes({
 });
 ```
 
-*use the following code for a predictable result.*
+*"is-red" may be present or it may not, use the following code for a predictable result.*
 
 ```javascript
 classes(
@@ -200,6 +200,7 @@ console.log(classname);
 > "button is-enabled"
 
 ...most of the times!
+however "is-rounded" may be present or it may not.
 ```
 
 *Use the following code for a predictable result.*
@@ -235,12 +236,13 @@ const classname = classes(
   "button is-enabled",
   "is-rounded",
   {
-    "is-rounded": (current) => {
+    "is-rounded": (current, classnames) => {
       // current = {
       //   button: true,
       //   "is-enabled": true
       //   "is-rounded": true
       // }
+      // classnames = ['is-rounded']
 
       // note: is-rounded = true
 
@@ -249,15 +251,16 @@ const classname = classes(
     }
   },
   {
-    "is-red": (current) => {
+    "is-red": (current, classnames) => {
       // current = {
       //   button: true,
       //   "is-enabled": true
       //   "is-rounded": false
       // }
+      // classnames = ['is-red']
 
       // note: is-rounded = false
-      // precause it was set to false in the previous step
+      // because it was set to false in the previous step
 
       return current["is-enabled"]
     },
