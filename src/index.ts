@@ -35,15 +35,18 @@ function normArray(arr: ArrayLike<ClassName>, out: NormalizedClassObject): Norma
     if (Array.isArray(value)) {
       normArray(value, out);
     } else if (value && typeof value === 'object') {
+      let current: Record<string, boolean> | undefined;
       each(value, (value, key) => {
         normString(
           key,
           !!(
             typeof value !== 'function' ? value : (value as IsClassPresent)(
-              each(out, (value, key, r) => {
-                r[key] = value;
-                return r;
-              }, {} as NormalizedClassObject),
+              current || (
+                current = each<boolean, NormalizedClassObject>(out, (value, key, r) => {
+                  r[key] = value;
+                  return r;
+                }, {})
+              ),
             )
           ),
           out,

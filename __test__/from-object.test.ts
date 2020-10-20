@@ -18,6 +18,18 @@ test('should call function in object', () => {
 
 });
 
+test('should call function in object with current state', () => {
+
+  const returnTrue = jest.fn(() => true);
+
+  const classObj = { 'class2 class3': returnTrue, 'class4': returnTrue };
+
+  expect(classes('class1', classObj)).toBe('class1 class2 class3 class4');
+  expect(returnTrue).toHaveBeenCalledTimes(2);
+  expect(returnTrue).toHaveBeenCalledWith({ class1: true });
+
+});
+
 test('should receive current normalized object', () => {
 
   const ifClass5 = jest.fn((curr: Record<string, unknown>) => curr.class5);
