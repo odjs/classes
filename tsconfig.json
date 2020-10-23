@@ -10,7 +10,9 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "resolveJsonModule": true,
-    "removeComments": true
+    "removeComments": true,
+    "declaration": true,
+    "declarationMap": true
   },
   "include": [
     "src/**/*.ts"
