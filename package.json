@@ -13,14 +13,14 @@
   "main": "dist/classes.js",
   "module": "dist/classes.mjs",
   "browser": "dist/classes.umd.js",
-  "types": "types/index.d.ts",
-  "typings": "types/index.d.ts",
+  "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "dev": "bundlib -dw",
     "build": "bundlib -d",
     "test": "jest --color -w 3",
     "test:watch": "npm test -- --watch-all",
-    "clean": "rimraf node_modules/.cache/bundlib node_modules/.cache/jest dist types coverage",
+    "clean": "rimraf node_modules/.cache/bundlib node_modules/.cache/jest dist coverage",
     "lint": "eslint src/** __test__/**",
     "prerelease": "npm run clean && npm run lint && npm test && npm run build",
     "release": "standard-version"
@@ -42,8 +42,7 @@
     "typescript": "^4.0.3"
   },
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
   "author": {
     "name": "Manuel Fernandez",
