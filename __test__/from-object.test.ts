@@ -20,7 +20,7 @@ test('should call function in object', () => {
 
 test('should call function in object with current state', () => {
 
-  const returnTrue = jest.fn(() => true);
+  const returnTrue = jest.fn<true, [unknown, string[]]>(() => true);
 
   const classObj1 = { 'class2 class3': returnTrue };
   const classObj2 = { 'class4': returnTrue };
@@ -34,7 +34,7 @@ test('should call function in object with current state', () => {
 
 test('should receive current normalized object', () => {
 
-  const ifClass5 = jest.fn((curr: Record<string, unknown>) => curr.class5);
+  const ifClass5 = jest.fn<boolean | undefined, [Partial<Record<string, boolean>>, string[]]>((curr) => curr.class5);
 
   const classObj1 = { 'class2 class3': ifClass5 };
   const classObj2 = { class4: false };
