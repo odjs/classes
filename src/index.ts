@@ -1,8 +1,6 @@
-type IsClassPresent = (current: NormalizedClassObject, classnames: string[]) => unknown;
-type ClassObject = Record<string, IsClassPresent | unknown>;
-type NormalizedClassObject = Record<string, boolean>;
-type ClassName = ClassArray | string | ClassObject | NormalizedClassObject;
-type ClassArray = Array<ClassName>;
+type IsClassPresent = classes.IsClassPresent;
+type NormalizedClassObject = classes.NormalizedClassObject;
+type ClassName = classes.ClassName;
 
 function each<V>(obj: Record<string, V>, cb: (val: V, key: string) => void): void;
 function each<V, R>(obj: Record<string, V>, cb: (val: V, key: string, out: R) => R, out: R): R;
@@ -71,6 +69,15 @@ function classes(): string {
     (incl, cn, res) => !incl ? res : res ? `${res} ${cn}` : cn,
     '',
   );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
+namespace classes {
+  export type IsClassPresent = (current: NormalizedClassObject, classnames: string[]) => unknown;
+  export type ClassObject = Record<string, IsClassPresent | unknown>;
+  export type NormalizedClassObject = Record<string, boolean>;
+  export type ClassName = ClassArray | string | ClassObject | NormalizedClassObject;
+  export type ClassArray = Array<ClassName>;
 }
 
 export default classes;
