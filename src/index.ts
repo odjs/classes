@@ -40,59 +40,72 @@ function normStrings(names: string[], value: boolean, output: NormalizedClassObj
   return output;
 }
 
-function normArray(array: ArrayLike<ClassName>, output: NormalizedClassObject): NormalizedClassObject {
-
-  const { length } = array;
-
-  for (let i = 0; i < length; i++) {
-
-    const item = array[i];
-
-    if (item && typeof item === 'object') {
-      if (Array.isArray(item)) {
-        normArray(
-          item,
-          output,
-        );
-      } else {
-        each(item, (value, key) => {
-          if (key) {
-            if (typeof value === 'function') {
-              value = (value as IsClassPresent)(
-                each<boolean, NormalizedClassObject>(
-                  output,
-                  (value, key, result) => {
-                    result[key] = value;
-                    return result;
-                  },
-                  {},
-                ),
-                key.split(' '),
-              );
-            }
-            normStrings(
+function processItem(item: ClassName, output: NormalizedClassObject): NormalizedClassObject {
+  if (item && typeof item === 'object') {
+    if (Array.isArray(item)) {
+      normArray(
+        item,
+        output,
+      );
+    } else {
+      each(item, (value, key) => {
+        if (key) {
+          if (typeof value === 'function') {
+            value = (value as IsClassPresent)(
+              each<boolean, NormalizedClassObject>(
+                output,
+                (value, key, result) => {
+                  result[key] = value;
+                  return result;
+                },
+                {},
+              ),
               key.split(' '),
-              !!value,
-              output,
             );
           }
-        });
-      }
-    } else {
-      const names = `${item}`;
-      if (names) {
-        normStrings(
-          names.split(' '),
-          true,
-          output,
-        );
-      }
+          normStrings(
+            key.split(' '),
+            !!value,
+            output,
+          );
+        }
+      });
     }
-
+  } else if (typeof item === 'function') {
+    item = item(
+      each<boolean, NormalizedClassObject>(
+        output,
+        (value, key, result) => {
+          result[key] = value;
+          return result;
+        },
+        {},
+      ),
+    );
+    processItem(
+      item,
+      output,
+    );
+  } else {
+    const names = `${item}`;
+    if (names) {
+      normStrings(
+        names.split(' '),
+        true,
+        output,
+      );
+    }
   }
-
   return output;
+}
 
+function normArray(array: ArrayLike<ClassName>, output: NormalizedClassObject): NormalizedClassObject {
+  const { length } = array;
+  for (let i = 0; i < length; i++) {
+    const item = array[i];
+    processItem(item, output);
+  }
+  return output;
 }
 
 function classes(...classnames: ClassName[]): string;
@@ -110,10 +123,11 @@ function classes(): string {
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace classes {
-  export type IsClassPresent = (current: NormalizedClassObject, classnames: string[]) => unknown;
+  export type IsClassPresent = (current: Readonly<NormalizedClassObject>, classnames: string[]) => unknown;
+  export type ResolveClass = (current: Readonly<NormalizedClassObject>) => ClassName;
   export type ClassObject = Record<string, IsClassPresent | unknown>;
   export type NormalizedClassObject = Record<string, boolean>;
-  export type ClassName = ClassArray | string | ClassObject | NormalizedClassObject;
+  export type ClassName = string | ResolveClass | ClassArray | ClassObject | NormalizedClassObject;
   export type ClassArray = ClassName[];
 }
 
