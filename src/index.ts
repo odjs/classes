@@ -114,7 +114,7 @@ namespace classes {
   export type ClassObject = Record<string, IsClassPresent | unknown>;
   export type NormalizedClassObject = Record<string, boolean>;
   export type ClassName = ClassArray | string | ClassObject | NormalizedClassObject;
-  export type ClassArray = Array<ClassName>;
+  export type ClassArray = ClassName[];
 }
 
 export default classes;

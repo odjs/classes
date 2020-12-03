@@ -48,3 +48,8 @@ rules:
   "@typescript-eslint/semi":
     - error
     - always
+
+  "@typescript-eslint/array-type":
+    - error
+    - default: array-simple
+      readonly: array-simple
