@@ -35,6 +35,9 @@ rules:
     - error
     - always-multiline
 
+  no-useless-rename: error
+  object-shorthand: error
+
   no-multiple-empty-lines:
     - error
     - max: 1
