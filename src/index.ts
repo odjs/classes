@@ -2,26 +2,25 @@ type IsClassPresent = classes.IsClassPresent;
 type NormalizedClassObject = classes.NormalizedClassObject;
 type ClassName = classes.ClassName;
 
-function each<V>(
-  base: Record<string, V>,
-  callback: (value: V, key: string) => void
+function eachTrue(
+  base: Record<string, unknown>,
+  callback: (key: string) => void
 ): void;
 
-function each<V, R>(
-  base: Record<string, V>,
-  callback: (value: V, key: string, output: R) => R,
+function eachTrue<R>(
+  base: Record<string, unknown>,
+  callback: (key: string, output: R) => R,
   output: R
 ): R;
 
-function each<V, R>(
-  base: Record<string, V>,
-  callback: (value: V, key: string, output?: R | undefined) => R | undefined,
+function eachTrue<R>(
+  base: Record<string, unknown>,
+  callback: (key: string, output?: R | undefined) => R | undefined,
   output?: R,
 ): R | undefined {
   for (const key in base) {
-    if ({}.hasOwnProperty.call(base, key)) {
+    if (base[key]) {
       output = callback(
-        base[key],
         key,
         output,
       );
@@ -40,7 +39,7 @@ function normStrings(names: string[], value: boolean, output: NormalizedClassObj
   return output;
 }
 
-function processItem(item: ClassName, output: NormalizedClassObject): NormalizedClassObject {
+function processItem(item: ClassName, output: NormalizedClassObject): void {
   if (item && typeof item === 'object') {
     if (Array.isArray(item)) {
       normArray(
@@ -48,45 +47,47 @@ function processItem(item: ClassName, output: NormalizedClassObject): Normalized
         output,
       );
     } else {
-      each(item, (value, key) => {
-        if (key) {
-          if (typeof value === 'function') {
-            value = (value as IsClassPresent)(
-              each<boolean, NormalizedClassObject>(
-                output,
-                (value, key, result) => {
-                  result[key] = value;
-                  return result;
-                },
-                {},
-              ),
+      for (const key in item) {
+        if ({}.hasOwnProperty.call(item, key)) {
+          if (key) {
+            let value = item[key];
+            if (typeof value === 'function') {
+              value = (value as IsClassPresent)(
+                eachTrue<Record<string, true>>(
+                  output,
+                  (key, result) => {
+                    result[key] = true;
+                    return result;
+                  },
+                  {},
+                ),
+                key.split(' '),
+              );
+            }
+            normStrings(
               key.split(' '),
+              !!value,
+              output,
             );
           }
-          normStrings(
-            key.split(' '),
-            !!value,
-            output,
-          );
         }
-      });
+      }
     }
   } else if (typeof item === 'function') {
-    item = item(
-      each<boolean, NormalizedClassObject>(
-        output,
-        (value, key, result) => {
-          result[key] = value;
-          return result;
-        },
-        {},
-      ),
-    );
     processItem(
-      item,
+      item(
+        eachTrue<Record<string, true>>(
+          output,
+          (key, result) => {
+            result[key] = true;
+            return result;
+          },
+          {},
+        ),
+      ),
       output,
     );
-  } else {
+  } else if (item != null) {
     const names = `${item}`;
     if (names) {
       normStrings(
@@ -96,7 +97,6 @@ function processItem(item: ClassName, output: NormalizedClassObject): Normalized
       );
     }
   }
-  return output;
 }
 
 function normArray(array: ArrayLike<ClassName>, output: NormalizedClassObject): NormalizedClassObject {
@@ -110,24 +110,25 @@ function normArray(array: ArrayLike<ClassName>, output: NormalizedClassObject): 
 
 function classes(...classnames: ClassName[]): string;
 function classes(): string {
-  return each(
+  return eachTrue(
     normArray(
       // eslint-disable-next-line prefer-rest-params
       arguments as ArrayLike<ClassName>,
       {},
     ),
-    (include, name, result) => !include ? result : result ? `${result} ${name}` : name,
+    (name, result) => result ? `${result} ${name}` : name,
     '',
   );
 }
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace classes {
-  export type IsClassPresent = (current: Readonly<NormalizedClassObject>, classnames: string[]) => unknown;
-  export type ResolveClass = (current: Readonly<NormalizedClassObject>) => ClassName;
+  export type CurrentState = Readonly<Record<string, true>>;
+  export type IsClassPresent = (current: CurrentState, classnames: string[]) => unknown;
+  export type ResolveClass = (current: CurrentState) => ClassName;
   export type ClassObject = Record<string, IsClassPresent | unknown>;
   export type NormalizedClassObject = Record<string, boolean>;
-  export type ClassName = string | ResolveClass | ClassArray | ClassObject | NormalizedClassObject;
+  export type ClassName = string | ResolveClass | ClassArray | ClassObject | NormalizedClassObject | null | undefined | void;
   export type ClassArray = ClassName[];
 }
 

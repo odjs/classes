@@ -24,13 +24,15 @@ test('Should remove duplicated class names', () => {
   expect(classes(classnames)).toBe('class1 class2');
 });
 
-test('Should ignore empty strings and spaces', () => {
+test('Should ignore empty strings, spaces, null and undefined', () => {
   const emptyString = '';
   const spaces = '    ';
   const classnames = [
     emptyString,
     spaces,
-    [emptyString, spaces],
+    null,
+    undefined,
+    [emptyString, spaces, null, undefined],
     { [emptyString]: true, [spaces]: true },
   ];
   expect(classes(...classnames)).toBe('');
@@ -50,15 +52,13 @@ test('Should ignore object prototype properties', () => {
 });
 
 test('Should return even if incorrect type passes', () => {
-  const classnames: Array<number | boolean | null | undefined> = [
+  const classnames: Array<number | boolean> = [
     0,
     1,
     2,
     true,
     false,
-    null,
-    undefined,
   ];
-  expect(classes(...classnames as never[])).toBe('0 1 2 false null true undefined');
-  expect(classes(classnames as never[])).toBe('0 1 2 false null true undefined');
+  expect(classes(...classnames as never[])).toBe('0 1 2 false true');
+  expect(classes(classnames as never[])).toBe('0 1 2 false true');
 });

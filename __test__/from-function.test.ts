@@ -27,14 +27,15 @@ test('Should return class name from multiple class names', () => {
 });
 
 test('Should receive current classnames', () => {
-  const removeClass12 = jest.fn<Record<string, boolean>, [unknown]>(() => ({ 'class1 class2': false }));
-  const addClass4 = jest.fn<string, [unknown]>(() => 'class4');
-  const addClass34 = jest.fn<[string, (current: unknown) => string], [unknown]>(() => ['class3', addClass4]);
+  type CurrentState = Readonly<Record<string, true>>;
+  const removeClass12 = jest.fn<Record<string, boolean>, [CurrentState]>(() => ({ 'class1 class2': false }));
+  const addClass4 = jest.fn<string, [CurrentState]>(() => 'class4');
+  const addClass34 = jest.fn<[string, (current: CurrentState) => string], [CurrentState]>(() => ['class3', addClass4]);
   expect(classes('class1 class4', removeClass12, addClass34)).toBe('class3 class4');
   expect(removeClass12).toHaveBeenCalledTimes(1);
   expect(addClass4).toHaveBeenCalledTimes(1);
   expect(addClass34).toHaveBeenCalledTimes(1);
   expect(removeClass12).toHaveBeenCalledWith({ class1: true, class4: true });
-  expect(addClass4).toHaveBeenCalledWith({ class1: false, class2: false, class3: true, class4: true });
-  expect(addClass34).toHaveBeenCalledWith({ class1: false, class2: false, class4: true });
+  expect(addClass4).toHaveBeenCalledWith({ class3: true, class4: true });
+  expect(addClass34).toHaveBeenCalledWith({ class4: true });
 });

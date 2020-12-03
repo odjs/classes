@@ -49,6 +49,6 @@ test('Should receive current normalized object', () => {
 
   expect(ifNotClass1).toHaveBeenCalledTimes(2);
   expect(ifNotClass1).toHaveBeenNthCalledWith(1, { class1: true }, ['class1']);
-  expect(ifNotClass1).toHaveBeenNthCalledWith(2, { class1: false }, ['class2', 'class3']);
+  expect(ifNotClass1).toHaveBeenNthCalledWith(2, {}, ['class2', 'class3']);
 
 });
