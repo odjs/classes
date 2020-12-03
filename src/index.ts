@@ -29,7 +29,7 @@ function eachTrue<R>(
   return output;
 }
 
-function normStrings(names: string[], value: boolean, output: NormalizedClassObject): void {
+function precessStrings(names: string[], value: boolean, output: NormalizedClassObject): void {
   const { length } = names;
   for (let i = 0; i < length; i++) {
     if (names[i]) {
@@ -41,7 +41,7 @@ function normStrings(names: string[], value: boolean, output: NormalizedClassObj
 function processItem(item: ClassName, output: NormalizedClassObject): void {
   if (item && typeof item === 'object') {
     if (Array.isArray(item)) {
-      normArray(
+      precessArray(
         item,
         output,
       );
@@ -63,7 +63,7 @@ function processItem(item: ClassName, output: NormalizedClassObject): void {
                 key.split(' '),
               );
             }
-            normStrings(
+            precessStrings(
               key.split(' '),
               !!value,
               output,
@@ -89,7 +89,7 @@ function processItem(item: ClassName, output: NormalizedClassObject): void {
   } else if (item != null) {
     const names = `${item}`;
     if (names) {
-      normStrings(
+      precessStrings(
         names.split(' '),
         true,
         output,
@@ -98,7 +98,7 @@ function processItem(item: ClassName, output: NormalizedClassObject): void {
   }
 }
 
-function normArray(array: ArrayLike<ClassName>, output: NormalizedClassObject): NormalizedClassObject {
+function precessArray(array: ArrayLike<ClassName>, output: NormalizedClassObject): NormalizedClassObject {
   const { length } = array;
   for (let i = 0; i < length; i++) {
     const item = array[i];
@@ -110,7 +110,7 @@ function normArray(array: ArrayLike<ClassName>, output: NormalizedClassObject): 
 function classes(...classnames: ClassName[]): string;
 function classes(): string {
   return eachTrue(
-    normArray(
+    precessArray(
       // eslint-disable-next-line prefer-rest-params
       arguments as ArrayLike<ClassName>,
       {},
