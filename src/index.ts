@@ -29,14 +29,13 @@ function eachTrue<R>(
   return output;
 }
 
-function normStrings(names: string[], value: boolean, output: NormalizedClassObject): NormalizedClassObject {
+function normStrings(names: string[], value: boolean, output: NormalizedClassObject): void {
   const { length } = names;
   for (let i = 0; i < length; i++) {
     if (names[i]) {
       output[names[i]] = value;
     }
   }
-  return output;
 }
 
 function processItem(item: ClassName, output: NormalizedClassObject): void {
