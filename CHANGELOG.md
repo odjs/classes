@@ -2,6 +2,14 @@
 
 ## Version History
 
+## [1.3.0](https://github.com/odjs/classes/compare/v1.2.0...v1.3.0) (2020-12-03)
+
+
+### Features
+
+* Allow function as class resolver ([befde7d](https://github.com/odjs/classes/commit/befde7d69616eaa23cb6d62367b6c7142cd5137a))
+* Ignore nullish & only true current state ([b5a3144](https://github.com/odjs/classes/commit/b5a3144bb9b3c8e8b87dcb41c9a3349315275b24))
+
 ## [1.2.0](https://github.com/odjs/classes/compare/v1.1.2...v1.2.0) (2020-10-20)
 
 
