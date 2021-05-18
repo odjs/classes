@@ -30,7 +30,7 @@
     "release": "standard-version"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.2",
+    "@babel/core": "^7.14.3",
     "@babel/preset-env": "^7.14.2",
     "@types/jest": "^26.0.23",
     "@types/node": "^15.3.0",
