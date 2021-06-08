@@ -10,11 +10,17 @@
     "classname",
     "classnames"
   ],
-  "main": "dist/classes.js",
-  "module": "dist/classes.mjs",
-  "browser": "dist/classes.umd.js",
-  "types": "dist/index.d.ts",
-  "typings": "dist/index.d.ts",
+  "type": "commonjs",
+  "exports": {
+    "import": "./dist/classes.mjs",
+    "default": "./dist/classes.cjs"
+  },
+  "main": "./dist/classes.cjs",
+  "module": "./dist/classes.mjs",
+  "jsnext:main": "./dist/classes.mjs",
+  "browser": "./dist/classes.umd.js",
+  "types": "./dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
   "scripts": {
     "clean:cache": "rimraf node_modules/.cache/{bundlib,jest}",
     "clean:build": "rimraf dist coverage",
