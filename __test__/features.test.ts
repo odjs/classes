@@ -44,7 +44,7 @@ test('Should ignore object prototype properties', () => {
   const classObj = Object.assign(
     Object.create({ prototypeClass: true }),
     { instanceClass: true },
-  ) as { prototypeClass: true, instanceClass: true };
+  ) as { prototypeClass: true; instanceClass: true };
 
   expect(classObj.prototypeClass).toBe(true);
   expect(classes(classObj)).toBe('instanceClass');

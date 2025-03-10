@@ -1,7 +1,7 @@
 import { classes } from './sorted';
 
 test('Should return class name from object', () => {
-  const classObj = { 'class1': false, 'class2 class3': true, 'class4': false };
+  const classObj = { class1: false, 'class2 class3': true, class4: false };
   expect(classes(classObj)).toBe('class2 class3');
 });
 
@@ -28,7 +28,7 @@ test('Should call function in object with current state', () => {
   const returnTrue = jest.fn<true, [unknown, string[]]>(() => true);
 
   const classObj1 = { 'class2 class3': returnTrue };
-  const classObj2 = { 'class4': returnTrue };
+  const classObj2 = { class4: returnTrue };
 
   expect(classes('class1', classObj1, classObj2)).toBe('class1 class2 class3 class4');
 
