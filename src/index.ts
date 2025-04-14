@@ -1,17 +1,17 @@
-type IsClassPresent = classes.IsClassPresent;
-type NormalizedClassObject = classes.NormalizedClassObject;
-type ClassName = classes.ClassName;
+type IsClassPresent = classes.IsClassPresent
+type NormalizedClassObject = classes.NormalizedClassObject
+type ClassName = classes.ClassName
 
 function eachTrue(
   base: Record<string, unknown>,
   callback: (key: string) => void
-): void;
+): void
 
 function eachTrue<R>(
   base: Record<string, unknown>,
   callback: (key: string, output: R) => R,
   output: R
-): R;
+): R
 
 function eachTrue<R>(
   base: Record<string, unknown>,
@@ -23,17 +23,17 @@ function eachTrue<R>(
       output = callback(
         key,
         output,
-      );
+      )
     }
   }
-  return output;
+  return output
 }
 
 function precessStrings(names: string[], value: boolean, output: NormalizedClassObject): void {
-  const { length } = names;
+  const { length } = names
   for (let i = 0; i < length; i++) {
     if (names[i]) {
-      output[names[i]] = value;
+      output[names[i]] = value
     }
   }
 }
@@ -44,30 +44,30 @@ function processItem(item: ClassName, output: NormalizedClassObject): void {
       precessArray(
         item,
         output,
-      );
+      )
     } else {
       for (const key in item) {
         if ({}.hasOwnProperty.call(item, key)) {
           if (key) {
-            let value = item[key];
+            let value = item[key]
             if (typeof value === 'function') {
               value = (value as IsClassPresent)(
                 eachTrue<Record<string, true>>(
                   output,
                   (key, result) => {
-                    result[key] = true;
-                    return result;
+                    result[key] = true
+                    return result
                   },
                   {},
                 ),
                 key.split(' '),
-              );
+              )
             }
             precessStrings(
               key.split(' '),
               !!value,
               output,
-            );
+            )
           }
         }
       }
@@ -78,37 +78,37 @@ function processItem(item: ClassName, output: NormalizedClassObject): void {
         eachTrue<Record<string, true>>(
           output,
           (key, result) => {
-            result[key] = true;
-            return result;
+            result[key] = true
+            return result
           },
           {},
         ),
       ),
       output,
-    );
+    )
   } else if (item != null) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    const names = `${item as never}`;
+    const names = `${item as never}`
     if (names) {
       precessStrings(
         names.split(' '),
         true,
         output,
-      );
+      )
     }
   }
 }
 
 function precessArray(array: ArrayLike<ClassName>, output: NormalizedClassObject): NormalizedClassObject {
-  const { length } = array;
+  const { length } = array
   for (let i = 0; i < length; i++) {
-    const item = array[i];
-    processItem(item, output);
+    const item = array[i]
+    processItem(item, output)
   }
-  return output;
+  return output
 }
 
-function classes(...classnames: ClassName[]): string;
+function classes(...classnames: ClassName[]): string
 function classes(): string {
   return eachTrue(
     precessArray(
@@ -118,20 +118,20 @@ function classes(): string {
     ),
     (name, result) => result ? `${result} ${name}` : name,
     '',
-  );
+  )
 }
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace classes {
-  export type CurrentState = Readonly<Record<string, true>>;
-  export type IsClassPresent = (current: CurrentState, classnames: string[]) => unknown;
-  export type ResolveClass = (current: CurrentState) => ClassName;
+  export type CurrentState = Readonly<Record<string, true>>
+  export type IsClassPresent = (current: CurrentState, classnames: string[]) => unknown
+  export type ResolveClass = (current: CurrentState) => ClassName
   // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-  export type ClassObject = Record<string, IsClassPresent | unknown>;
-  export type NormalizedClassObject = Record<string, boolean>;
+  export type ClassObject = Record<string, IsClassPresent | unknown>
+  export type NormalizedClassObject = Record<string, boolean>
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-  export type ClassName = string | ResolveClass | ClassArray | ClassObject | NormalizedClassObject | null | undefined | void;
-  export type ClassArray = ClassName[];
+  export type ClassName = string | ResolveClass | ClassArray | ClassObject | NormalizedClassObject | null | undefined | void
+  export type ClassArray = ClassName[]
 }
 
-export default classes;
+export default classes

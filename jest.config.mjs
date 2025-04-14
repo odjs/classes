@@ -1,10 +1,10 @@
-import { createDefaultPreset } from 'ts-jest';
+import { createDefaultPreset } from 'ts-jest'
 
-const coverageOnCI = process.env.CI;
+const coverageOnCI = process.env.CI
 
 const typescriptJestPreset = createDefaultPreset({
   tsconfig: './tsconfig.json',
-});
+})
 
 /** @type { import('ts-jest').JestConfigWithTsJest } */
 const config = {
@@ -27,6 +27,6 @@ const config = {
 
   cacheDirectory: 'node_modules/.cache/jest',
   verbose: true,
-};
+}
 
-export default config;
+export default config
