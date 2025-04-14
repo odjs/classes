@@ -30,10 +30,16 @@ const stylisticPluginConfig = config(
 );
 
 const typescriptPluginConfig = config(
-  ...pluginTypescriptConfigs.recommended,
+  { languageOptions: { parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname } } },
+  ...pluginTypescriptConfigs.strictTypeChecked,
+  ...pluginTypescriptConfigs.stylisticTypeChecked,
   normalizeRulesConfig('@typescript-eslint', {
     'array-type': { default: 'array-simple', readonly: 'array-simple' },
   }),
+  {
+    ...pluginTypescriptConfigs.disableTypeChecked,
+    files: ['**/*.{js,mjs,cjs}'],
+  },
 );
 
 export default config(

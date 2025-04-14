@@ -15,7 +15,7 @@ function eachTrue<R>(
 
 function eachTrue<R>(
   base: Record<string, unknown>,
-  callback: (key: string, output?: R | undefined) => R | undefined,
+  callback: (key: string, output?: R) => R | undefined,
   output?: R,
 ): R | undefined {
   for (const key in base) {
@@ -87,7 +87,8 @@ function processItem(item: ClassName, output: NormalizedClassObject): void {
       output,
     );
   } else if (item != null) {
-    const names = `${item}`;
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    const names = `${item as never}`;
     if (names) {
       precessStrings(
         names.split(' '),
@@ -125,8 +126,10 @@ namespace classes {
   export type CurrentState = Readonly<Record<string, true>>;
   export type IsClassPresent = (current: CurrentState, classnames: string[]) => unknown;
   export type ResolveClass = (current: CurrentState) => ClassName;
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   export type ClassObject = Record<string, IsClassPresent | unknown>;
   export type NormalizedClassObject = Record<string, boolean>;
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   export type ClassName = string | ResolveClass | ClassArray | ClassObject | NormalizedClassObject | null | undefined | void;
   export type ClassArray = ClassName[];
 }

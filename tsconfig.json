@@ -16,7 +16,8 @@
     "newLine": "lf"
   },
   "include": [
-    "src"
+    "src",
+    "__test__"
   ],
   "exclude": [
     "dist",

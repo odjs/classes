@@ -12,6 +12,7 @@
   ],
   "type": "commonjs",
   "exports": {
+    "types": "./dist/index.d.ts",
     "import": "./dist/classes.mjs",
     "default": "./dist/classes.cjs"
   },
