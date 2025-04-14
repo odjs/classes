@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node10",
+    "esModuleInterop": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "resolveJsonModule": true,
+    "removeComments": true,
+    "declaration": true,
+    "declarationMap": true,
+    "newLine": "lf"
+  },
+  "exclude": [
+    "dist",
+    "coverage"
+  ]
+}

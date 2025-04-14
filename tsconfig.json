@@ -1,26 +1,7 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "node10",
-    "esModuleInterop": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "resolveJsonModule": true,
-    "removeComments": true,
-    "declaration": true,
-    "declarationMap": true,
-    "newLine": "lf"
-  },
+  "extends": "./tsconfig-base.json",
   "include": [
     "src",
     "__test__"
-  ],
-  "exclude": [
-    "dist",
-    "coverage"
   ]
 }
