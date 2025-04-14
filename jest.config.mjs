@@ -1,18 +1,25 @@
+import { createDefaultPreset } from 'ts-jest';
+
+const coverageOnCI = process.env.CI;
+
+const typescriptJestPreset = createDefaultPreset({
+  tsconfig: './tsconfig.json',
+});
+
 /** @type { import('ts-jest').JestConfigWithTsJest } */
 const config = {
+  ...typescriptJestPreset,
+
   testEnvironment: 'node',
-  preset: 'ts-jest',
 
   collectCoverage: true,
   collectCoverageFrom: [
     'src/**/*.ts',
   ],
   coverageDirectory: 'coverage',
-  coverageReporters: [
-    process.env.CI ? 'json' : 'lcov',
-    'text',
-    'text-summary',
-  ],
+  coverageReporters: coverageOnCI
+    ? ['text', 'json', 'clover', 'cobertura']
+    : ['text', 'html'],
 
   testMatch: [
     '**/__test__/**/*.test.ts',
