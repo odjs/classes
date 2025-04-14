@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "es2015",
-    "moduleResolution": "node",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node10",
     "esModuleInterop": true,
     "strict": true,
     "noUnusedLocals": true,
@@ -12,7 +12,8 @@
     "resolveJsonModule": true,
     "removeComments": true,
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "newLine": "lf"
   },
   "include": [
     "src"

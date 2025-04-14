@@ -24,7 +24,7 @@ const stylisticPluginConfig = config(
   }),
   normalizeRulesConfig('@stylistic', {
     quotes: 'single',
-    'linebreak-style': 'windows',
+    'linebreak-style': 'unix',
     'padded-blocks': 'off',
   }),
 );
