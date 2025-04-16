@@ -1,4 +1,4 @@
-import { classes } from './sorted'
+import { classes } from './tools/sorted'
 
 test('Should return class name from array', () => {
   const classArray = [

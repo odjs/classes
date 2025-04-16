@@ -1,4 +1,4 @@
-import { classes } from './sorted'
+import { classes } from './tools/sorted'
 
 test('Should return class name from resolved class name', () => {
   expect(classes(() => 'class1 class2')).toBe('class1 class2')

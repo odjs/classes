@@ -1,136 +1,113 @@
-type IsClassPresent = classes.IsClassPresent
-type NormalizedClassObject = classes.NormalizedClassObject
-type ClassName = classes.ClassName
-
-function eachTrue(
-  base: Record<string, unknown>,
-  callback: (key: string) => void
-): void
-
-function eachTrue<R>(
-  base: Record<string, unknown>,
-  callback: (key: string, output: R) => R,
-  output: R
-): R
-
-function eachTrue<R>(
-  base: Record<string, unknown>,
-  callback: (key: string, output?: R) => R | undefined,
-  output?: R,
-): R | undefined {
-  for (const key in base) {
-    if (base[key]) {
-      output = callback(
-        key,
-        output,
-      )
-    }
-  }
-  return output
+function createState(normalized: classes.NormalizedClassObject): classes.CurrentState {
+  return Object.entries(normalized).reduce((output, [key, value]) => {
+    if (!value) return output
+    return { ...output, [key]: true }
+  }, {})
 }
 
-function precessStrings(names: string[], value: boolean, output: NormalizedClassObject): void {
-  const { length } = names
-  for (let i = 0; i < length; i++) {
-    if (names[i]) {
-      output[names[i]] = value
-    }
-  }
+function normalizeClassname(classname: string): string[] {
+  // split classname by white spaces and filter out empty classnames
+  return classname.split(/\s+/).filter((part) => part)
 }
 
-function processItem(item: ClassName, output: NormalizedClassObject): void {
-  if (item && typeof item === 'object') {
-    if (Array.isArray(item)) {
-      precessArray(
-        item,
-        output,
-      )
-    } else {
-      for (const key in item) {
-        if ({}.hasOwnProperty.call(item, key)) {
-          if (key) {
-            let value = item[key]
-            if (typeof value === 'function') {
-              value = (value as IsClassPresent)(
-                eachTrue<Record<string, true>>(
-                  output,
-                  (key, result) => {
-                    result[key] = true
-                    return result
-                  },
-                  {},
-                ),
-                key.split(' '),
-              )
-            }
-            precessStrings(
-              key.split(' '),
-              !!value,
-              output,
-            )
-          }
-        }
-      }
-    }
-  } else if (typeof item === 'function') {
-    processItem(
-      item(
-        eachTrue<Record<string, true>>(
-          output,
-          (key, result) => {
-            result[key] = true
-            return result
-          },
-          {},
-        ),
-      ),
-      output,
-    )
-  } else if (item != null) {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    const names = `${item as never}`
-    if (names) {
-      precessStrings(
-        names.split(' '),
-        true,
-        output,
-      )
-    }
-  }
-}
+function extendNormalized(input: classes.NormalizedClassObject, classnamesNormalized: string[], value: boolean): classes.NormalizedClassObject {
+  // return input if classnames is empty array
+  if (!classnamesNormalized.length) return input
 
-function precessArray(array: ArrayLike<ClassName>, output: NormalizedClassObject): NormalizedClassObject {
-  const { length } = array
-  for (let i = 0; i < length; i++) {
-    const item = array[i]
-    processItem(item, output)
-  }
-  return output
-}
-
-function classes(...classnames: ClassName[]): string
-function classes(): string {
-  return eachTrue(
-    precessArray(
-      // eslint-disable-next-line prefer-rest-params
-      arguments as ArrayLike<ClassName>,
-      {},
-    ),
-    (name, result) => result ? `${result} ${name}` : name,
-    '',
+  // return extended input
+  return classnamesNormalized.reduce(
+    (output, classname) => ({ ...output, [classname]: value }),
+    input,
   )
+}
+
+function normalizeItem(input: classes.NormalizedClassObject, item: classes.ClassName): classes.NormalizedClassObject {
+
+  // if item is a function...
+  if (typeof item === 'function') {
+    // create current state
+    const state = createState(input)
+
+    // call item as function
+    const itemResolved = item(state)
+
+    // apply changes based on result
+    return normalizeItem(
+      input,
+      itemResolved,
+    )
+  }
+
+  // skip if item is nullish
+  if (item == null) return input
+
+  // call normalizeItem for every value if item is an array
+  if (Array.isArray(item)) return item.reduce(normalizeItem, input)
+
+  // if item is an object (but not array)...
+  if (typeof item === 'object') {
+    return Object.entries(item).reduce((output, [key, value]) => {
+      // normalize class names
+      const classnames = normalizeClassname(key)
+
+      // apply changes based on value if value is not a function
+      if (typeof value !== 'function') {
+        return extendNormalized(
+          output,
+          classnames,
+          !!value,
+        )
+      }
+
+      // create current state
+      const state = createState(output)
+
+      // call value as function
+      const isPresent = (value as classes.IsClassPresent)(
+        state,
+        classnames,
+      )
+
+      // apply changes based on value as function
+      return extendNormalized(
+        output,
+        classnames,
+        !!isPresent,
+      )
+    }, input)
+  }
+
+  // apply changes
+  return extendNormalized(
+    input,
+    normalizeClassname(`${item as unknown}`),
+    true,
+  )
+}
+
+function classes(...classnames: classes.ClassName[]): string
+function classes(): string {
+  // eslint-disable-next-line prefer-rest-params
+  const argumentNormalized = Array.from(arguments as Iterable<classes.ClassName>).reduce(normalizeItem, {})
+  return Object.entries(argumentNormalized)
+    .reduce<string[]>((classnames, [classname, present]) => {
+      if (!present) return classnames
+      return [...classnames, classname]
+    }, [])
+    .join(' ')
 }
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace classes {
-  export type CurrentState = Readonly<Record<string, true>>
+  type ClassObjectBase<T> = Readonly<Record<string, T>>
+
+  export type CurrentState = ClassObjectBase<true>
+  export type NormalizedClassObject = ClassObjectBase<boolean>
+
   export type IsClassPresent = (current: CurrentState, classnames: string[]) => unknown
   export type ResolveClass = (current: CurrentState) => ClassName
-  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-  export type ClassObject = Record<string, IsClassPresent | unknown>
-  export type NormalizedClassObject = Record<string, boolean>
-  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-  export type ClassName = string | ResolveClass | ClassArray | ClassObject | NormalizedClassObject | null | undefined | void
+  export type ClassObject = ClassObjectBase<boolean | IsClassPresent | string | number | object | null | undefined>
+  export type ClassName = string | ResolveClass | ClassArray | ClassObject | null | undefined
   export type ClassArray = ClassName[]
 }
 

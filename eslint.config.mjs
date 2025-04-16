@@ -37,6 +37,7 @@ const typescriptPluginConfig = config(
   ...pluginTypescriptConfigs.stylisticTypeChecked,
   normalizeRulesConfig('@typescript-eslint', {
     'array-type': { default: 'array-simple', readonly: 'array-simple' },
+    'restrict-template-expressions': 'off',
   }),
   {
     ...pluginTypescriptConfigs.disableTypeChecked,

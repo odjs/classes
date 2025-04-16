@@ -1,4 +1,4 @@
-import { classes } from './sorted'
+import { classes } from './tools/sorted'
 
 test('Should return class name from object', () => {
   const classObj = { class1: false, 'class2 class3': true, class4: false }
