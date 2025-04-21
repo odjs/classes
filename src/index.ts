@@ -89,12 +89,11 @@ function classes(...classnames: classes.ClassName[]): string
 function classes(): string {
   // eslint-disable-next-line prefer-rest-params
   const argumentNormalized = Array.from(arguments as Iterable<classes.ClassName>).reduce(normalizeItem, {})
-  return Object.entries(argumentNormalized)
-    .reduce<string[]>((classnames, [classname, present]) => {
-      if (!present) return classnames
-      return [...classnames, classname]
-    }, [])
-    .join(' ')
+  return Object.entries(argumentNormalized).reduce<string>((output, [classname, present]) => {
+    if (!present) return output
+    if (!output) return classname
+    return `${output} ${classname}`
+  }, '')
 }
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
