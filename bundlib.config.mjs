@@ -5,5 +5,5 @@ export default config({
   esModule: true,
   min: ['browser', 'module'],
   equals: true,
-  project: './tsconfig-build.json',
+  project: './tsconfig.build.json',
 })
