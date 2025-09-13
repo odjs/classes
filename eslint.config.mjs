@@ -1,88 +1,116 @@
+import { defineConfig, globalIgnores } from 'eslint/config'
+import globals from 'globals'
+
 import pluginJavascript from '@eslint/js'
 import pluginStylistic from '@stylistic/eslint-plugin'
-import { flatConfigs as pluginImportConfigs } from 'eslint-plugin-import-x'
-import globals from 'globals'
-import { config, configs as pluginTypescriptConfigs } from 'typescript-eslint'
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
+import { createNodeResolver, flatConfigs as pluginImportConfigs } from 'eslint-plugin-import-x'
+import { configs as pluginTypescriptConfigs } from 'typescript-eslint'
 
-const javascriptPluginConfig = config(
+// Javascript Plugin
+
+const rulesPluginJavascript = normalizeRules(null, {
+  'no-useless-rename': 'on',
+  'object-shorthand': 'on',
+  'prefer-template': 'on',
+  'no-useless-concat': 'on',
+  eqeqeq: 'smart',
+})
+
+const configPluginJavascript = defineConfig(
   pluginJavascript.configs.recommended,
-  normalizeRulesConfig({
-    'no-useless-rename': 'error',
-    'object-shorthand': 'error',
-    'prefer-template': 'error',
-    'no-useless-concat': 'error',
-    eqeqeq: 'smart',
-  }),
+  { rules: rulesPluginJavascript },
 )
 
-const importPluginConfig = config(
+// Import Plugin
+
+const rulesPluginImport = normalizeRules('import-x', {
+  'consistent-type-specifier-style': 'on',
+  'no-useless-path-segments': 'on',
+  'no-absolute-path': 'on',
+  'no-cycle': 'on',
+  'no-nodejs-modules': 'on',
+})
+
+const resolversPluginImport = [
+  createTypeScriptImportResolver(),
+  createNodeResolver(),
+]
+
+const configPluginImport = defineConfig(
+  { settings: { 'import-x/resolver-next': resolversPluginImport } },
   pluginImportConfigs.recommended,
   pluginImportConfigs.typescript,
-  normalizeRulesConfig('import-x', {
-    'consistent-type-specifier-style': 'error',
-    'no-useless-path-segments': 'error',
-    'no-absolute-path': 'error',
-    'no-cycle': 'error',
-    'no-nodejs-modules': 'error',
-  }),
+  { rules: rulesPluginImport },
 )
 
-const stylisticPluginConfig = config(
-  // Disable rule until @stylistic/eslint-plugin types are fixed
-  // https://github.com/eslint-stylistic/eslint-stylistic/issues/762
-  //
-  // eslint-disable-next-line import-x/no-named-as-default-member
+// Stylistic Plugin
+
+const rulesPluginStylistic = normalizeRules('@stylistic', {
+  quotes: 'single',
+  'linebreak-style': 'unix',
+  'no-extra-parens': 'all',
+  'no-extra-semi': 'on',
+  'padded-blocks': 'off',
+})
+
+const configPluginStylistic = defineConfig(
   pluginStylistic.configs.customize({
+    quotes: 'single',
     indent: 2,
     semi: false,
     arrowParens: true,
     quoteProps: 'as-needed',
     braceStyle: '1tbs',
+    commaDangle: 'always-multiline',
+    blockSpacing: true,
+    jsx: false,
   }),
-  normalizeRulesConfig('@stylistic', {
-    quotes: 'single',
-    'linebreak-style': 'unix',
-    'no-extra-parens': 'all',
-    'no-extra-semi': 'error',
-    'padded-blocks': 'off',
-  }),
+  { rules: rulesPluginStylistic },
 )
 
-const typescriptPluginConfig = config(
+// TypescriptPlugin
+
+const rulesPluginTypescript = normalizeRules('@typescript-eslint', {
+  'array-type': { default: 'array-simple', readonly: 'array-simple' },
+  'restrict-template-expressions': 'off',
+})
+
+const configPluginTypescript = defineConfig(
   { languageOptions: { parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname } } },
   ...pluginTypescriptConfigs.strictTypeChecked,
   ...pluginTypescriptConfigs.stylisticTypeChecked,
-  normalizeRulesConfig('@typescript-eslint', {
-    'array-type': { default: 'array-simple', readonly: 'array-simple' },
-    'restrict-template-expressions': 'off',
-  }),
-  {
-    ...pluginTypescriptConfigs.disableTypeChecked,
-    files: ['**/*.{js,mjs,cjs}'],
-  },
+  { rules: rulesPluginTypescript },
 )
 
-export default config(
-  { ignores: ['dist', 'coverage'] },
-  { languageOptions: { globals: { ...globals.node, ...globals.browser } } },
-  { files: ['**/*.{js,mjs,cjs,ts}'] },
-  javascriptPluginConfig,
-  importPluginConfig,
-  stylisticPluginConfig,
-  typescriptPluginConfig,
-)
-
-function normalizeRulesConfig(pluginName, rules) {
-  if (!rules && pluginName) return normalizeRulesConfig(null, pluginName)
-  const entries = Object.entries(rules)
-  if (!entries.length) return {}
-  const normalizeEntry = createEntryNormalizer(pluginName)
-  const entriesNormalized = entries.map(normalizeEntry)
-  const rulesNormalized = Object.fromEntries(entriesNormalized)
-  return { rules: rulesNormalized }
+const configDisableJavascriptTypeCheck = {
+  ...pluginTypescriptConfigs.disableTypeChecked,
+  files: ['**/*.{js,mjs,cjs}'],
 }
 
-function createEntryNormalizer(pluginName) {
+// Config
+
+export default defineConfig(
+  globalIgnores(['dist', 'coverage']),
+  { languageOptions: { globals: { ...globals.node, ...globals.browser } } },
+  { files: ['**/*.{js,mjs,cjs,ts}'] },
+  configPluginJavascript,
+  configPluginImport,
+  configPluginStylistic,
+  configPluginTypescript,
+  configDisableJavascriptTypeCheck,
+)
+
+// Helpers
+
+function normalizeRules(pluginName, rules) {
+  const normalizeObjectEntry = createObjectEntryNormalizer(pluginName)
+  const entries = Object.entries(rules)
+  const entriesNormalized = entries.map(normalizeObjectEntry)
+  return Object.fromEntries(entriesNormalized)
+}
+
+function createObjectEntryNormalizer(pluginName) {
   if (!pluginName) return ([ruleName, ruleEntry]) => [ruleName, normalizeRuleEntry(ruleEntry)]
   const normalizeRuleName = createRuleNameNormalizer(pluginName)
   return ([ruleName, ruleEntry]) => [normalizeRuleName(ruleName), normalizeRuleEntry(ruleEntry)]
@@ -97,7 +125,19 @@ function createRuleNameNormalizer(pluginName) {
 }
 
 function normalizeRuleEntry(value) {
-  if (Array.isArray(value)) return value
-  if (['error', 'off', 'warn'].includes(value)) return value
+  if (value === true || value === 'on') return 'error'
+  if (value === false) return 'off'
+
+  if (Array.isArray(value)) {
+    if (isSeverity(value[0])) return value
+    return ['error', ...value]
+  }
+
+  if (isSeverity(value)) return value
+
   return ['error', value]
+}
+
+function isSeverity(value) {
+  return ['error', 'off', 'warn'].includes(value)
 }
