@@ -6,7 +6,6 @@ test('Should return class name from object', () => {
 })
 
 test('Should call function in object', () => {
-
   const returnTruthy = jest.fn(() => 1)
   const returnFalsy = jest.fn(() => 0)
 
@@ -20,11 +19,9 @@ test('Should call function in object', () => {
   expect(classes(classObj)).toBe('class1 class2 class4')
   expect(returnTruthy).toHaveBeenCalledTimes(2)
   expect(returnFalsy).toHaveBeenCalledTimes(2)
-
 })
 
 test('Should call function in object with current state', () => {
-
   const returnTrue = jest.fn<true, [unknown, string[]]>(() => true)
 
   const classObj1 = { 'class2 class3': returnTrue }
@@ -35,11 +32,9 @@ test('Should call function in object with current state', () => {
   expect(returnTrue).toHaveBeenCalledTimes(2)
   expect(returnTrue).toHaveBeenNthCalledWith(1, { class1: true }, ['class2', 'class3'])
   expect(returnTrue).toHaveBeenNthCalledWith(2, { class1: true, class2: true, class3: true }, ['class4'])
-
 })
 
 test('Should receive current normalized object', () => {
-
   const ifNotClass1 = jest.fn<boolean | undefined, [Partial<Record<string, boolean>>, string[]]>((curr) => !curr.class1)
 
   const classObj1 = { class1: ifNotClass1 }
@@ -50,5 +45,4 @@ test('Should receive current normalized object', () => {
   expect(ifNotClass1).toHaveBeenCalledTimes(2)
   expect(ifNotClass1).toHaveBeenNthCalledWith(1, { class1: true }, ['class1'])
   expect(ifNotClass1).toHaveBeenNthCalledWith(2, {}, ['class2', 'class3'])
-
 })

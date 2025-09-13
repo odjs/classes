@@ -44,7 +44,6 @@ test('Should ignore empty strings, spaces, null and undefined', () => {
 })
 
 test('Should ignore object prototype properties', () => {
-
   const classObj = createObjectWithPrototype(
     { prototypeClass: true },
     { instanceClass: true },
@@ -53,7 +52,6 @@ test('Should ignore object prototype properties', () => {
   expect(classObj.prototypeClass).toBe(true)
   expect(classObj.instanceClass).toBe(true)
   expect(classes(classObj)).toBe('instanceClass')
-
 })
 
 test('Should return even if incorrect type passes', () => {

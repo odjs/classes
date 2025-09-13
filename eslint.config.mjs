@@ -51,7 +51,6 @@ const rulesPluginStylistic = normalizeRules('@stylistic', {
   'linebreak-style': 'unix',
   'no-extra-parens': 'all',
   'no-extra-semi': 'on',
-  'padded-blocks': 'off',
 })
 
 const configPluginStylistic = defineConfig(
