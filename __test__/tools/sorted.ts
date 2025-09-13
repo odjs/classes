@@ -1,6 +1,6 @@
-import classesUnsorted from '../../src'
+import originalClassesFunction from '../../src'
 
-export function classes(...names: classesUnsorted.ClassName[]): string {
-  const result = classesUnsorted(...names)
+export function classes(...names: originalClassesFunction.ClassName[]): string {
+  const result = originalClassesFunction(...names)
   return result ? result.split(' ').sort().join(' ') : ''
 }
