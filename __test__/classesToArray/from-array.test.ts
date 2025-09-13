@@ -1,5 +1,8 @@
-import { classes } from './tools/sorted'
-describe('passing arrays to classes function', () => {
+import { classesToArrayToString } from '../tools/sorted'
+
+describe('passing arrays to classesToArray function', () => {
+  //
+
   test('Should return classname from array', () => {
     const classArray = [
       'class1',
@@ -9,6 +12,6 @@ describe('passing arrays to classes function', () => {
       () => 'class7',
       () => ['class8'],
     ]
-    expect(classes(classArray)).toBe('class1 class2 class5 class6 class7 class8')
+    expect(classesToArrayToString(classArray)).toBe('class1 class2 class5 class6 class7 class8')
   })
 })

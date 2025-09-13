@@ -1,14 +1,16 @@
-import { createObjectWithPrototype } from './tools/create'
-import { classes } from './tools/sorted'
+import { createObjectWithPrototype } from '../tools/create'
+import { classesToArrayToString } from '../tools/sorted'
 
-describe('classes function features', () => {
+describe('classesToArray function features', () => {
+  //
+
   test('Should normalize classname', () => {
     const messedUp = '  class1    class2  '
     const expected = 'class1 class2'
-    expect(classes(messedUp)).toBe(expected)
-    expect(classes([messedUp])).toBe(expected)
-    expect(classes({ [messedUp]: true })).toBe(expected)
-    expect(classes(() => messedUp)).toBe(expected)
+    expect(classesToArrayToString(messedUp)).toBe(expected)
+    expect(classesToArrayToString([messedUp])).toBe(expected)
+    expect(classesToArrayToString({ [messedUp]: true })).toBe(expected)
+    expect(classesToArrayToString(() => messedUp)).toBe(expected)
   })
 
   test('Should remove duplicated classnames', () => {
@@ -29,8 +31,8 @@ describe('classes function features', () => {
       { [expected]: () => true },
       { class1: true, class2: true, [expected]: true },
     ]
-    expect(classes(...classnames)).toBe(expected)
-    expect(classes(classnames)).toBe(expected)
+    expect(classesToArrayToString(...classnames)).toBe(expected)
+    expect(classesToArrayToString(classnames)).toBe(expected)
   })
 
   test('Should ignore empty strings, spaces, null and undefined', () => {
@@ -44,8 +46,8 @@ describe('classes function features', () => {
       [emptyString, spaces, null, undefined],
       { [emptyString]: true, [spaces]: true },
     ]
-    expect(classes(...classnames)).toBe(emptyString)
-    expect(classes(classnames)).toBe(emptyString)
+    expect(classesToArrayToString(...classnames)).toBe(emptyString)
+    expect(classesToArrayToString(classnames)).toBe(emptyString)
   })
 
   test('Should ignore object prototype properties', () => {
@@ -56,7 +58,7 @@ describe('classes function features', () => {
 
     expect(classObj.prototypeClass).toBe(true)
     expect(classObj.instanceClass).toBe(true)
-    expect(classes(classObj)).toBe('instanceClass')
+    expect(classesToArrayToString(classObj)).toBe('instanceClass')
   })
 
   // TODO: This will change in the next major release
@@ -68,7 +70,7 @@ describe('classes function features', () => {
       true,
       false,
     ]
-    expect(classes(...classnames)).toBe('0 1 2 false true')
-    expect(classes(classnames)).toBe('0 1 2 false true')
+    expect(classesToArrayToString(...classnames)).toBe('0 1 2 false true')
+    expect(classesToArrayToString(classnames)).toBe('0 1 2 false true')
   })
 })

@@ -1,10 +1,11 @@
-import { classes } from './tools/sorted'
+import { classesToArrayToString } from '../tools/sorted'
 
-describe('passing objects to classes function', () => {
+describe('passing objects to classesToArray function', () => {
   //
+
   test('Should return classname from object', () => {
     const classObj = { class1: false, 'class2 class3': true, class4: false }
-    expect(classes(classObj)).toBe('class2 class3')
+    expect(classesToArrayToString(classObj)).toBe('class2 class3')
   })
 
   test('Should call function in object', () => {
@@ -18,7 +19,7 @@ describe('passing objects to classes function', () => {
       'class5 class6': returnFalsy,
     }
 
-    expect(classes(classObj)).toBe('class1 class2 class4')
+    expect(classesToArrayToString(classObj)).toBe('class1 class2 class4')
 
     expect(returnTruthy).toHaveBeenCalledTimes(2)
     expect(returnFalsy).toHaveBeenCalledTimes(2)
@@ -30,7 +31,7 @@ describe('passing objects to classes function', () => {
     const classObj1 = { 'class2 class3': returnTrue }
     const classObj2 = { class4: returnTrue }
 
-    expect(classes('class1', classObj1, classObj2)).toBe('class1 class2 class3 class4')
+    expect(classesToArrayToString('class1', classObj1, classObj2)).toBe('class1 class2 class3 class4')
 
     expect(returnTrue).toHaveBeenCalledTimes(2)
     expect(returnTrue).toHaveBeenNthCalledWith(1, { class1: true }, ['class2', 'class3'])
@@ -43,7 +44,7 @@ describe('passing objects to classes function', () => {
     const classObj1 = { class1: ifNotClass1 }
     const classObj2 = { 'class2 class3': ifNotClass1 }
 
-    expect(classes('class1', classObj1, classObj2)).toBe('class2 class3')
+    expect(classesToArrayToString('class1', classObj1, classObj2)).toBe('class2 class3')
 
     expect(ifNotClass1).toHaveBeenCalledTimes(2)
     expect(ifNotClass1).toHaveBeenNthCalledWith(1, { class1: true }, ['class1'])

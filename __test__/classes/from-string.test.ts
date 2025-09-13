@@ -1,6 +1,8 @@
-import { classes } from './tools/sorted'
+import { classes } from '../tools/sorted'
 
 describe('passing strings to classes function', () => {
+  //
+
   test('Should return classname from a classname', () => {
     const className = 'class1 class2'
     expect(classes(className)).toBe(className)
