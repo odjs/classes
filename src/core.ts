@@ -1,11 +1,10 @@
 import type { ClassArray, ClassesState, ClassItem, ClassObject, DeprecatedState, IsClassPresent, ResolveClass } from './types'
 
-// DO NO OPTIMIZE!!
-//
-// TODO: Implement function calls with whole state
-//
+// DO NOT OPTIMIZE!!
 // It will be removed in the future...
 // ...as functions will receive the whole state
+//
+// TODO: Implement function calls with whole state
 function deprecated_createState(state: ClassesState): DeprecatedState {
   return Object.entries(state).reduce((output, [cleanClassName, value]) => {
     if (!value) return output
