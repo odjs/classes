@@ -72,7 +72,15 @@ const configPluginStylistic = defineConfig(
 
 const rulesPluginTypescript = normalizeRules('@typescript-eslint', {
   'array-type': { default: 'array-simple', readonly: 'array-simple' },
-  'restrict-template-expressions': 'off',
+  'restrict-template-expressions': {
+    allowNumber: false,
+    allowBoolean: false,
+    allowNullish: false,
+    allowArray: false,
+    allowRegExp: false,
+    allowAny: false,
+    allowNever: true,
+  },
 })
 
 const configPluginTypescript = defineConfig(
