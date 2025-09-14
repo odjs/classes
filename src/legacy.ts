@@ -10,12 +10,6 @@ import type {
   ResolveClass as ModernResolveClass,
 } from './types'
 
-/**
- * Converts a series of class items into a normalized classname string
- *
- * @param classNames A series of class items to be processed
- * @returns A normalize classname string
- */
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace classes {
   export type CurrentState = DeprecatedState
