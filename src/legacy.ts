@@ -1,4 +1,5 @@
-import { classes as classesNext } from './classes'
+import { classes } from './classes'
+
 import type {
   DeprecatedState,
   ClassArray as ModernClassArray,
@@ -15,12 +16,8 @@ import type {
  * @param classNames A series of class items to be processed
  * @returns A normalize classname string
  */
-export function classes(...classNames: classes.ClassArray): string {
-  return classesNext(classNames)
-}
-
 // eslint-disable-next-line @typescript-eslint/no-namespace
-export namespace classes {
+namespace classes {
   export type CurrentState = DeprecatedState
   export type NormalizedClassObject = ModernClassesState
 

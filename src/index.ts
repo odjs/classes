@@ -1,2 +1,2 @@
-import { classes } from './legacy'
+import classes from './legacy'
 export default classes
