@@ -1,20 +1,20 @@
-import { processArray } from './core'
+import { processClassItem } from './core'
 import type { ClassArray } from './types'
 
 /**
- * Converts and array of class items into an array of "clean" classnames
+ * Converts and array of class items into an array of "clean" class names
  *
- * @param classItem An array to be processes
- * @returns An array of "clean" classnames
+ * @param classArray An array to be processes
+ * @returns An array of "clean" class names
  */
-function arrayToArray(classItem: ClassArray): string[] {
+function arrayToArray(classArray: ClassArray): string[] {
   // Create state from class item
-  const state = processArray({}, classItem)
+  const state = classArray.reduce(processClassItem, {})
 
-  // Get clean classnames from state
+  // Get clean class names from state
   const classNames = Object.keys(state)
 
-  // Return filtered classname
+  // Return filtered class names
   return classNames.filter((className) => state[className])
 }
 

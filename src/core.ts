@@ -6,8 +6,8 @@ import type { ClassArray, ClassesState, ClassItem, ClassObject, DeprecatedState,
 //
 // TODO: Implement function calls with whole state
 function deprecated_createState(state: ClassesState): DeprecatedState {
-  return Object.entries(state).reduce((output, [cleanClassName, value]) => {
-    if (!value) return output
+  return Object.keys(state).reduce((output, cleanClassName) => {
+    if (!state[cleanClassName]) return output
     return { ...output, [cleanClassName]: true }
   }, {})
 }
@@ -15,30 +15,50 @@ function deprecated_createState(state: ClassesState): DeprecatedState {
 // Core functionalities
 
 /**
- * Cleans up a "dirty" classname
- */
-function cleanupClassName(dirtyClassName: string): string[] | undefined {
-  // Fail if dirtyClassName is an empty string
-  if (!dirtyClassName) return
-
-  // Trim spaces form the beginning an end of the string
-  const trimmedClassName = dirtyClassName.trim()
-
-  // Fail if trimmedClassName is an empty string...
-  // ...that means it was a string with spaces only
-  if (!trimmedClassName) return
-
-  // Split the into cleaned up parts
-  return trimmedClassName.split(/\s+/)
-}
-
-/**
  * Extends the current state with the provided clean classnames and value
  */
-function extendStateClean(state: ClassesState, cleanClassNames: string[], value: boolean): ClassesState {
+function extendStateCleanBoolean(state: ClassesState, cleanClassNames: string[], value: boolean): ClassesState {
   return cleanClassNames.reduce((state, cleanClassName) => {
     return { ...state, [cleanClassName]: value }
   }, state)
+}
+
+/**
+ * Extends the current state with the provided clean classnames and a possibly callable value
+ */
+function extendStateCleanCallable(state: ClassesState, cleanClassNames: string[], value: unknown): ClassesState {
+  // If value is not a function...
+  if (typeof value !== 'function') {
+    // Extend state with cleaned up classnames and value as boolean
+    return extendStateCleanBoolean(
+      state,
+      cleanClassNames,
+      !!value,
+    )
+  }
+
+  // Create current state
+  const deprecatedState = deprecated_createState(state)
+
+  // Clone clean classnames to pass to the function
+  const cleanClassNamesClone = [...cleanClassNames]
+
+  // Call value as function to evaluate if classnames should be present
+  const isPresent = (value as IsClassPresent)(deprecatedState, cleanClassNamesClone)
+
+  // Extend state with clean classnames and function call result as boolean
+  return extendStateCleanBoolean(
+    state,
+    cleanClassNames,
+    !!isPresent,
+  )
+}
+
+/**
+ * Converts a "dirty" className into an array of "clean" classNames
+ */
+function cleanupClassName(dirtyClassName: string): string[] {
+  return dirtyClassName.split(/\s+/).filter(Boolean)
 }
 
 /**
@@ -60,40 +80,14 @@ function processFunctionItem(state: ClassesState, resolveClass: ResolveClass): C
  */
 function processObjectItem(state: ClassesState, classObject: ClassObject): ClassesState {
   // Get object entries
-  const dirtyClassEntries = Object.entries(classObject)
+  const dirtyClassEntries = Object.entries<unknown>(classObject)
 
   // Return updated state
   return dirtyClassEntries.reduce<ClassesState>((state, [dirtyClassName, value]) => {
-    // Try to clean up the string
-    const cleanClassNames = cleanupClassName(dirtyClassName)
-
-    // Skip item if classname couldn't be cleaned up
-    if (!cleanClassNames) return state
-
-    // If value is not a function...
-    if (typeof value !== 'function') {
-      // Extend state with cleaned up classnames and value as boolean
-      return extendStateClean(
-        state,
-        cleanClassNames,
-        !!value,
-      )
-    }
-
-    // Create current state
-    const deprecatedState = deprecated_createState(state)
-
-    // Clone clean classnames to pass to the function
-    const cleanClassNamesClone = [...cleanClassNames]
-
-    // Call value as function to evaluate if classnames should be present
-    const isPresent = (value as IsClassPresent)(deprecatedState, cleanClassNamesClone)
-
-    // Extend state with clean classnames and function call result as boolean
-    return extendStateClean(
+    return extendStateCleanCallable(
       state,
-      cleanClassNames,
-      !!isPresent,
+      cleanupClassName(dirtyClassName),
+      value,
     )
   }, state)
 }
@@ -102,23 +96,22 @@ function processObjectItem(state: ClassesState, classObject: ClassObject): Class
  * Processes a class item.
  * This is the core function, it decides what to do with every type of item
  */
-function processClassItem(state: ClassesState, classItem: ClassItem): ClassesState {
+export function processClassItem(state: ClassesState, classItem: ClassItem): ClassesState {
   // Skip if item is nullish
   if (classItem == null) return state
 
-  // Get item type
-  const itemType = typeof classItem
+  switch (typeof classItem) {
+    // Process item if it's a function
+    case 'function': return processFunctionItem(state, classItem)
 
-  // Process item if it's a function
-  if (itemType === 'function') return processFunctionItem(state, classItem as ResolveClass)
+    // Process item if it's an array or object
+    case 'object': {
+      // Process item if it's an array
+      if (Array.isArray(classItem)) return (classItem as ClassArray).reduce(processClassItem, state)
 
-  // Process item if it's an array or object
-  if (itemType === 'object') {
-    // Process item if it's an array
-    if (Array.isArray(classItem)) return processArray(state, classItem)
-
-    // Process item if it's an object
-    return processObjectItem(state, classItem as ClassObject)
+      // Process item if it's an object
+      return processObjectItem(state, classItem as ClassObject)
+    }
   }
 
   // Convert user item to string
@@ -126,23 +119,9 @@ function processClassItem(state: ClassesState, classItem: ClassItem): ClassesSta
   // ...to check for empty or invalid strings
   const dirtyClassName = `${classItem as never}`
 
-  // Try to clean up the string
-  const cleanClassNames = cleanupClassName(dirtyClassName)
-
-  // Skip item if classname couldn't be cleaned up
-  if (!cleanClassNames) return state
-
-  // Extend state with clean classnames
-  return extendStateClean(
+  return extendStateCleanBoolean(
     state,
-    cleanClassNames,
+    cleanupClassName(dirtyClassName),
     true,
   )
-}
-
-/**
- * Processes an array of item
- */
-export function processArray(state: ClassesState, classNames: ClassArray): ClassesState {
-  return classNames.reduce(processClassItem, state)
 }
