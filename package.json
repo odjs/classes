@@ -40,7 +40,8 @@
     "ci-build": "run-s check build",
     "clean-build": "run-s clean ci-build",
     "prerelease": "run-s clean ci-build",
-    "release": "standard-version"
+    "release": "standard-version",
+    "release-dry": "standard-version --dry-run"
   },
   "devDependencies": {
     "@babel/core": "^7.28.4",
