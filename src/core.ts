@@ -1,4 +1,5 @@
-import type { ClassArray, ClassesState, ClassItem, ClassObject, DeprecatedState, IsClassPresent, ResolveClass } from './types'
+import type { IsArrayFunction } from './private-types'
+import type { ClassesState, ClassItem, ClassObjectValue, DeprecatedState, IsClassPresent } from './types'
 
 // DO NOT OPTIMIZE!!
 // It will be removed in the future...
@@ -26,7 +27,7 @@ function extendStateCleanBoolean(state: ClassesState, cleanClassNames: string[],
 /**
  * Extends the current state with the provided clean classnames and a possibly callable value
  */
-function extendStateCleanCallable(state: ClassesState, cleanClassNames: string[], value: unknown): ClassesState {
+function extendStateCleanCallable(state: ClassesState, cleanClassNames: string[], value: ClassObjectValue): ClassesState {
   // If value is not a function...
   if (typeof value !== 'function') {
     // Extend state with cleaned up classnames and value as boolean
@@ -62,37 +63,6 @@ function cleanupClassName(dirtyClassName: string): string[] {
 }
 
 /**
- * Processes a function class item
- */
-function processFunctionItem(state: ClassesState, resolveClass: ResolveClass): ClassesState {
-  // Create current state
-  const deprecatedState = deprecated_createState(state)
-
-  // Call resolver to get a class item
-  const classItem = resolveClass(deprecatedState)
-
-  // Process returned class item
-  return processClassItem(state, classItem)
-}
-
-/**
- * Processes a class object
- */
-function processObjectItem(state: ClassesState, classObject: ClassObject): ClassesState {
-  // Get object entries
-  const dirtyClassEntries = Object.entries<unknown>(classObject)
-
-  // Return updated state
-  return dirtyClassEntries.reduce<ClassesState>((state, [dirtyClassName, value]) => {
-    return extendStateCleanCallable(
-      state,
-      cleanupClassName(dirtyClassName),
-      value,
-    )
-  }, state)
-}
-
-/**
  * Processes a class item.
  * This is the core function, it decides what to do with every type of item
  */
@@ -102,15 +72,33 @@ export function processClassItem(state: ClassesState, classItem: ClassItem): Cla
 
   switch (typeof classItem) {
     // Process item if it's a function
-    case 'function': return processFunctionItem(state, classItem)
+    case 'function': {
+      // Create current state
+      const deprecatedState = deprecated_createState(state)
+
+      // Call resolver to get a class item
+      const resolvedClassItem = classItem(deprecatedState)
+
+      // Process returned class item
+      return processClassItem(state, resolvedClassItem)
+    }
 
     // Process item if it's an array or object
     case 'object': {
       // Process item if it's an array
-      if (Array.isArray(classItem)) return (classItem as ClassArray).reduce(processClassItem, state)
+      if ((Array.isArray as IsArrayFunction)(classItem)) return classItem.reduce(processClassItem, state)
 
-      // Process item if it's an object
-      return processObjectItem(state, classItem as ClassObject)
+      // Get object entries
+      const dirtyClassEntries = Object.keys(classItem)
+
+      // Return updated state
+      return dirtyClassEntries.reduce<ClassesState>((state, dirtyClassName) => {
+        return extendStateCleanCallable(
+          state,
+          cleanupClassName(dirtyClassName),
+          classItem[dirtyClassName],
+        )
+      }, state)
     }
   }
 

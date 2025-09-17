@@ -1,11 +1,12 @@
-type Dictionary<T> = Readonly<Record<string, T>>
+import type { Dictionary, UnknownArray } from './private-types'
 
 export type DeprecatedState = Dictionary<true>
 export type ClassesState = Dictionary<boolean>
 
-export type IsClassPresent = (state: DeprecatedState, classNames: readonly string[]) => unknown
+export type IsClassPresent = (state: DeprecatedState, cleanClassNames: readonly string[]) => unknown
 export type ResolveClass = (state: DeprecatedState) => ClassItem
-export type ClassObject = Dictionary<boolean | string | number | IsClassPresent | object | null | undefined>
+export type ClassObjectValue = boolean | IsClassPresent | string | number | object | UnknownArray | null | undefined
+export type ClassObject = Dictionary<ClassObjectValue>
 
 export type ClassItem = string | boolean | number | null | undefined | ClassArray | ClassObject | ResolveClass
 export type ClassArray = readonly ClassItem[]
