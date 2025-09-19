@@ -10,3 +10,5 @@ export type ClassObject = Dictionary<ClassObjectValue>
 
 export type ClassItem = string | boolean | number | null | undefined | ClassArray | ClassObject | ResolveClass
 export type ClassArray = readonly ClassItem[]
+
+export type ProcessClassItemFunction<I> = (state: ClassesState, classItem: I) => ClassesState
