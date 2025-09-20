@@ -1,4 +1,3 @@
-import type { IsArrayFunction } from './private-types'
 import { cleanupClassName, deprecated_createState, extendStateClean } from './tools'
 import type { ClassesState, ClassItem, IsClassPresent } from './types'
 
@@ -12,58 +11,46 @@ export function processClassItem(state: ClassesState, classItem: ClassItem): Cla
 
   switch (typeof classItem) {
     // Process item if it's a function
-    case 'function': {
-      // Process returned class item
-      return processClassItem(
-        state,
-        // Call resolver to get a class item
-        classItem(
-          // Create current state
-          deprecated_createState(state),
-        ))
-    }
+    case 'function': return processClassItem(
+      state,
+      // Call resolver to get a class item
+      classItem(
+        // Create current state
+        deprecated_createState(state),
+      ),
+    )
 
     // Process item if it's an array or object
-    case 'object': {
-      // Process item if it's an array
-      if ((Array.isArray as IsArrayFunction)(classItem))
-        return classItem.reduce(processClassItem, state)
+    case 'object': return Array.isArray(classItem)
+      ? classItem.reduce(processClassItem, state)
+      : Object.entries(classItem).reduce<ClassesState>((state, [dirtyClassName, value]) => {
+          // Cleanup class name
+          const cleanClassNameList = cleanupClassName(dirtyClassName)
 
-      // Get object entries
-      const dirtyClassNameList = Object.entries(classItem)
+          // Prevent unnecessary function call if clean class name list is empty
+          if (!cleanClassNameList.length) return state
 
-      // Return updated state
-      return dirtyClassNameList.reduce<ClassesState>((state, [dirtyClassName, value]) => {
-        // Cleanup class name
-        const cleanClassNameList = cleanupClassName(dirtyClassName)
+          // Extend state with cleaned up class names and value as boolean if it's not a function
+          if (typeof value !== 'function') return extendStateClean(state, cleanClassNameList, !!value)
 
-        // If value is not a function...
-        if (typeof value !== 'function') {
-          // Extend state with cleaned up class names and value as boolean
-          return extendStateClean(state, cleanClassNameList, !!value)
-        }
+          // Call value as function to evaluate if classnames should be present
+          const isClassPresent = value as IsClassPresent, isPresent = isClassPresent(
+            // Create current state
+            deprecated_createState(state),
+            // Clone clean class names to pass to the function...
+            // ...so user can't change it
+            [...cleanClassNameList],
+          )
 
-        // Call value as function to evaluate if classnames should be present
-        const isPresent = (value as IsClassPresent)(
-          // Create current state
-          deprecated_createState(state),
-          // Clone clean class names to pass to the function...
-          // ...so user can't change it
-          [...cleanClassNameList],
-        )
-
-        // Extend state with clean class names and function call result as boolean
-        return extendStateClean(state, cleanClassNameList, !!isPresent)
-      }, state)
-    }
+          // Extend state with clean class names and function call result as boolean
+          return extendStateClean(state, cleanClassNameList, !!isPresent)
+        }, state)
   }
 
-  // Convert item to string
-  const dirtyClassName = `${classItem as never}`
-
-  // Cleanup generated class name
-  const cleanClassNameList = cleanupClassName(dirtyClassName)
-
   // Extend state
-  return extendStateClean(state, cleanClassNameList, true)
+  return extendStateClean(
+    state,
+    cleanupClassName(`${classItem as never}`),
+    true,
+  )
 }

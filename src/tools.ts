@@ -12,8 +12,6 @@ export function deprecated_createState(state: ClassesState): DeprecatedState {
   }, {})
 }
 
-// Core functionalities
-
 /**
  * Converts a "dirty" class name into an array of "clean" class names.
  * A "dirty" class name may content multiple class names and unwanted spaces.
