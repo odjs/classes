@@ -1,0 +1,122 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*.*.*
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  Lint:
+    name: Lint
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout, Setup Node.js v${{ env.NODE_VERSION }} and Install dependencies
+        uses: manferlo81/action-checkout-node-install@v0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+        env:
+          NODE_VERSION: 22.x
+
+      - name: Lint
+        run: npm run lint
+
+  Test_and_Build:
+    strategy:
+      matrix:
+        os:
+          - name: Ubuntu
+            image: ubuntu-latest
+          - name: macOS
+            image: macos-latest
+          - name: Windows
+            image: windows-latest
+
+        node-version:
+          - 18.x
+          - 20.x
+          - 21.x
+          - 22.x
+
+    name: Test and Build ( Node.js v${{ matrix.node-version }} on ${{ matrix.os.name }} )
+
+    runs-on: ${{ matrix.os.image }}
+    needs: Lint
+
+    steps:
+      - name: Checkout, Setup Node.js v${{ matrix.node-version }} and Install dependencies
+        uses: manferlo81/action-checkout-node-install@v0
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  Create_Release:
+    name: Create GitHub Release
+
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'tag'
+    needs: Test_and_Build
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout, Setup Node.js v${{ env.NODE_VERSION }} and Install dependencies
+        uses: manferlo81/action-checkout-node-install@v0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+        env:
+          NODE_VERSION: 22.x
+
+      - name: Build
+        run: npm run build
+
+      - name: Create tarball
+        run: npm pack
+
+      - name: Create Release
+        uses: manferlo81/action-auto-release@v0
+        with:
+          files: odjs-classes-*.tgz
+
+  # Publish_to_npm:
+  #   name: Publish Package to npm Registry
+
+  #   runs-on: ubuntu-latest
+  #   if: github.ref_type == 'tag'
+  #   needs: Test_and_Build
+
+  #   permissions:
+  #     contents: read
+  #     id-token: write
+
+  #   steps:
+  #     - name: Checkout, Setup Node.js v${{ env.NODE_VERSION }} and Install dependencies
+  #       uses: manferlo81/action-checkout-node-install@v0
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         registry-url: https://registry.npmjs.org
+  #       env:
+  #         NODE_VERSION: 22.x
+
+  #     - name: Build
+  #       run: npm run build
+
+  #     - name: Publish package
+  #       run: npm publish --provenance --access public
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
