@@ -15,6 +15,7 @@ const config = {
   collectCoverage: true,
   collectCoverageFrom: [
     'src/**/*.ts',
+    '!src/**/*.d.ts',
   ],
   coverageDirectory: 'coverage',
   coverageReporters: coverageOnCI

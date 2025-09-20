@@ -1,6 +1,6 @@
-import { config } from 'bundlib'
+import { defineConfig } from 'bundlib'
 
-export default config({
+export default defineConfig({
   interop: true,
   esModule: true,
   min: ['browser', 'module'],
