@@ -9,16 +9,16 @@ executors:
       - image: node:18
     working_directory: &working_directory ~/odjs-classes
 
-commands:
-  npm_publish:
-    steps:
-      - run:
-          name: Authenticate
-          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
-      - run:
-          name: Publish to npm
-          # specify access for scoped package
-          command: npm publish --access public
+# commands:
+#   npm_publish:
+#     steps:
+#       - run:
+#           name: Authenticate
+#           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+#       - run:
+#           name: Publish to npm
+#           # specify access for scoped package
+#           command: npm publish --access public
 
 jobs:
   test_and_build:
@@ -55,11 +55,11 @@ jobs:
       - codecov/upload:
           file: coverage/*.json
 
-  publish_to_npm:
-    executor: node
-    steps:
-      - attach_workspace: *attach_workspace
-      - npm_publish
+  # publish_to_npm:
+  #   executor: node
+  #   steps:
+  #     - attach_workspace: *attach_workspace
+  #     - npm_publish
 
 workflows:
   workflow:
@@ -78,12 +78,12 @@ workflows:
             branches:
               only: /master/
 
-      - publish_to_npm:
-          context: npm
-          requires:
-            - test_and_build
-          filters:
-            tags:
-              only: /^v\d+\.\d+\.\d+$/
-            branches:
-              ignore: /.*/
+      # - publish_to_npm:
+      #     context: npm
+      #     requires:
+      #       - test_and_build
+      #     filters:
+      #       tags:
+      #         only: /^v\d+\.\d+\.\d+$/
+      #       branches:
+      #         ignore: /.*/
