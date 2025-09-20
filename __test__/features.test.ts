@@ -1,5 +1,5 @@
-import { createObjectWithPrototype } from '../tools/create'
-import { classes } from '../tools/sorted'
+import { createObjectWithPrototype } from './tools/create'
+import { classes } from './tools/sorted'
 
 describe('classes function features', () => {
   //

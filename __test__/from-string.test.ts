@@ -1,4 +1,4 @@
-import { classes } from '../tools/sorted'
+import { classes } from './tools/sorted'
 
 describe('passing strings to classes function', () => {
   //

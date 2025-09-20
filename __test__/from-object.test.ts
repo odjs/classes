@@ -1,4 +1,4 @@
-import { classes } from '../tools/sorted'
+import { classes } from './tools/sorted'
 
 describe('passing objects to classes function', () => {
   //
@@ -23,6 +23,19 @@ describe('passing objects to classes function', () => {
 
     expect(returnTruthy).toHaveBeenCalledTimes(2)
     expect(returnFalsy).toHaveBeenCalledTimes(2)
+  })
+
+  test('Should not call function if classname is empty', () => {
+    const shouldNeverBeCalled = jest.fn(() => true)
+
+    const classObj = {
+      '': shouldNeverBeCalled,
+      ' ': shouldNeverBeCalled,
+      '       ': shouldNeverBeCalled,
+    }
+
+    expect(classes(classObj)).toBe('')
+    expect(shouldNeverBeCalled).toHaveBeenCalledTimes(0)
   })
 
   test('Should call function in object with current state', () => {
